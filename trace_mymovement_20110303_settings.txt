@@ -1,0 +1,6 @@
+Scenario.name =v8_trace_mymovement_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_%%Scenario.endTime%%
+Scenario.endTime = 10800
+Report.reportDir = reports/mymodel/
+Group.nrofHosts = 4000
+Group.movementModel = ExternalMovement
+ExternalMovement.file = data/mymodel/trace_mymovement_4000.txt

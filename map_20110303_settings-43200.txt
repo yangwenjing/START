@@ -1,0 +1,9 @@
+
+Scenario.name =v8_trace_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_%%Scenario.endTime%%
+
+Scenario.endTime = 43200
+Report.reportDir = reports/trace/
+Group.nrofHosts = 3
+Group.movementModel = ShortestPathMapBasedMovement
+MapBasedMovement.nrofMapFiles = 1
+MapBasedMovement.mapFile1 = data/mymodel/beigjing_smaller_after_format_20110303.wkt
