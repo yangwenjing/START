@@ -20,6 +20,7 @@ import core.Tuple;
 
 /**
  * Handler for points of interest data.
+ * 处理权重节点
  */
 public class PointsOfInterest {
 	/** Points Of Interest settings namespace ({@value})*/
@@ -43,7 +44,7 @@ public class PointsOfInterest {
 	private int [] okMapNodeTypes;
 	/** list of all this POI instance's POI lists */
 	private ArrayList<List<MapNode>> poiLists;
-	/** list of probabilites of choosing a POI group */
+	/** list of probabilites of choosing a POI group 用于指定节点的概率 */
 	private List<Tuple<Double, Integer>> poiProbs;
 	/** (pseudo) random number generator */
 	private Random rng;
@@ -52,7 +53,7 @@ public class PointsOfInterest {
 	 * Constructor.
 	 * @param parentMap The map whose MapNodes' subset the POIs are
 	 * @param okMapNodeTypes Array of map node types that are OK to visit or
-	 * null if all nodes are OK
+	 * null if all nodes are OK 这个参数可以限定哪些点是可以访问的。
 	 * @param settings The Settings object where settings are read from
 	 * @param rng The random number generator to use
 	 */
@@ -71,6 +72,7 @@ public class PointsOfInterest {
 	 * POI groups is done by their probabilities. If sum of their probabilities
 	 * is less than 1.0 and the drawn random probability is bigger than the sum,
 	 * a random MapNode is selected from the SimMap. 
+	 * 这个函数用于生产目标节点的node
 	 * @return A destination among POIs or all MapNodes
 	 */
 	public MapNode selectDestination() {
