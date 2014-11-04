@@ -457,4 +457,4 @@ dtnsim2parser转换dtnsim2的（http://watwire.uwaterloo.ca/DTN/sim/）输出
 transimsParser将TRANSIM的（http://transims-opensource.net/）车辆 
 快照文件作为外部移动文件转换为节点移动的输入文件。详见ExternalMovement和ExternalMovementReader类。
 
-
+   :)
