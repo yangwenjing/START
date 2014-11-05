@@ -25,11 +25,17 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	
 	private static Regions regions=null;
 	
+	/** 记录节点的速度 */
+	private double speed;
+	/** 记录节点的持续时长 */
+	private double duration;
+	
 	/** 状态0  设置持续时长的参数 */
 	private static double DURATION_A_FOR_STATUS0 = 0.971101;
-	private static double DURATION_A_FOR_STATUS1 = 0.988955;
 	private static double DURATION_PARA_FOR_STATUS0 = 0.00217593;
+	
 	/** 状态1 的持续时长参数*/
+	private static double DURATION_A_FOR_STATUS1 = 0.988955;
 	private static double DURATION_PARA_FOR_STATUS1 = 0.00103644;
 		
 
@@ -51,7 +57,8 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	
 	@Override
 	public Path getPath() {
-		Path p = new Path(generateSpeed());
+		this.speed = generateSpeed();
+		Path p = new Path(speed);
 		/**
 		 * TODO:在这里实现
 		 * 1.找到目的节点
@@ -74,6 +81,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		
 		return p;
 	}	
+	
 	
 	@Override
 	public Coord getInitialLocation() {
@@ -121,7 +129,9 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	}
 	
 	private void setTimer() {
-		this.timer = SimClock.getIntTime()+(int)generateLastingTime(this.status);
+		this.duration = generateLastingTime(this.status);
+		this.timer = SimClock.getIntTime()+(int)this.duration;
+		
 	}
 	private double generateLastingTime(int status)
 	{
