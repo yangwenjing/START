@@ -25,10 +25,10 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	
 	private static Regions regions=null;
 	
-	
-	/** 设置持续时长的参数 */
-	private static double e_1 = 0.00149701;
-	private static double e_2 = 0.000969622;
+	/** 状态0  设置持续时长的参数 */
+	private static double DURATION_PARA_FOR_STATUS0 = 0.00188674;
+	/** 状态1 的持续时长参数*/
+	private static double DURATION_PARA_FOR_STATUS1 = 0.000994104;
 		
 
 	/**
@@ -199,13 +199,13 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	private double cumulativeLastingTimeForStatus0(int timeLength)
 	{
 		if(timeLength<0) return 0;
-		return 1-Math.exp(-e_1*timeLength);
+		return 1-Math.exp(-DURATION_PARA_FOR_STATUS0*timeLength);
 		
 	}
 	private double cumulativeLastingTimeForStatus1(int timeLength)
 	{
 		if(timeLength<0) return 0;
-		return 1-Math.exp(-e_2*timeLength);
+		return 1-Math.exp(-DURATION_PARA_FOR_STATUS1*timeLength);
 		
 	}
 	
