@@ -4,16 +4,32 @@
 package movement;
 
 import java.util.List;
+import java.util.Random;
 
 import movement.map.MapNode;
 import core.Coord;
 import core.Settings;
+import core.SimClock;
 
 /**
  * @author Yang Wenjing
  *
  */
 public class STARTMovement extends ShortestPathMapBasedMovement {
+	
+	/** 区分车辆状态 */
+	private int status;
+	
+	/** 判断是否超过持续时长 */
+	private int timer;
+	
+	private static Regions regions=null;
+	
+	
+	/** 设置持续时长的参数 */
+	private static double e_1 = 0.00149701;
+	private static double e_2 = 0.000969622;
+		
 
 	/**
 	 * @param settings
@@ -97,8 +113,101 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	 */
 	public MapNode selectDestination()
 	{
+		//TODO:设置如何写timer
 		return null;
 		
 	}
+	
+	private void setTimer() {
+		this.timer = SimClock.getIntTime()+(int)generateLastingTime(this.status);
+	}
+	private double generateLastingTime(int status)
+	{
+		Random rd1 = new Random();
+		double seed =  rd1.nextDouble();
+		if(status==0)
+			return generateLastingTimeForStatus0(seed);
+		else
+			return generateLastingTimeForStatus1(seed);
+		
+	}
+	private double generateLastingTimeForStatus1(double seed)
+	{
+		int maxLength = 20000;
+		int tmpLen_bak_max = maxLength;
+		int tmpLen_bak_min = 0;
+		int tmpLen = maxLength/2;
+		if(seed>=cumulativeLastingTimeForStatus1(maxLength))return maxLength;
+		if(seed<=cumulativeLastingTimeForStatus1(0)) return 0;
+		
+		
+		do{
+			if(seed<cumulativeLastingTimeForStatus1(tmpLen))
+			{
+				tmpLen_bak_max = tmpLen;
+				tmpLen = (tmpLen_bak_max-tmpLen_bak_min)/2+tmpLen_bak_min;
+			}
+			else if(seed>cumulativeLastingTimeForStatus1(tmpLen))
+			{
+				tmpLen_bak_min = tmpLen;
+				tmpLen = (tmpLen_bak_max-tmpLen_bak_min)/2+tmpLen_bak_min;
+			}
+			else
+				return tmpLen;
+				
+		}
+		while(Math.abs(tmpLen_bak_max-tmpLen_bak_min)<=1);
+			
+		return tmpLen;
+		
+		
+	}
+	
+	
+	private double generateLastingTimeForStatus0(double seed)
+	{
+		int maxLength = 20000;
+		int tmpLen_bak_max = maxLength;
+		int tmpLen_bak_min = 0;
+		int tmpLen = maxLength/2;
+		if(seed>=cumulativeLastingTimeForStatus0(maxLength))return maxLength;
+		if(seed<=cumulativeLastingTimeForStatus0(0)) return 0;
+		
+		//System.out.println("calculate lasting time...");
+		do{
+			if(seed<cumulativeLastingTimeForStatus0(tmpLen))
+			{
+				tmpLen_bak_max = tmpLen;
+				tmpLen = (tmpLen_bak_max-tmpLen_bak_min)/2+tmpLen_bak_min;
+			}
+			else if(seed>cumulativeLastingTimeForStatus0(tmpLen))
+			{
+				tmpLen_bak_min = tmpLen;
+				tmpLen = (tmpLen_bak_max-tmpLen_bak_min)/2+tmpLen_bak_min;
+			}
+			else
+				return tmpLen;
+				
+		}
+		while(Math.abs(tmpLen_bak_max-tmpLen_bak_min)<=100);
+		//System.out.println("finish calculating lasting time...");
+		return tmpLen;
+		
+		
+	}
+	
+	private double cumulativeLastingTimeForStatus0(int timeLength)
+	{
+		if(timeLength<0) return 0;
+		return 1-Math.exp(-e_1*timeLength);
+		
+	}
+	private double cumulativeLastingTimeForStatus1(int timeLength)
+	{
+		if(timeLength<0) return 0;
+		return 1-Math.exp(-e_2*timeLength);
+		
+	}
+	
 
 }
