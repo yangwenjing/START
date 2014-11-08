@@ -24,5 +24,5 @@ public class Cell implements Comparable<Cell>{
 	public int compareTo(Cell arg0) {
 		return this.num>=arg0.num?-1:1;
 	}
-
+	
 }
