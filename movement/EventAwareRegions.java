@@ -2,6 +2,7 @@ package movement;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Scanner;
@@ -17,8 +18,8 @@ public class EventAwareRegions {
 	/**记录 cell中的事件数，用于初始位置的选择 */
 	private List cells;
 	
-	private String Area_matrix_inputFileName;
-	private String Transition_probability_inputFileName;
+	public String Area_matrix_inputFileName;
+	public String Transition_probability_inputFileName;
 	
 	private static final double area_left=0;
 	private static final double area_right=1;
@@ -31,6 +32,7 @@ public class EventAwareRegions {
 		this.event = event;
 		this.cell_region = new Hashtable<String, Integer>();
 		this.transition_prob = new Hashtable<String, Double>();
+		this.cells = new ArrayList<Cell>();
 
 	}
 	
@@ -52,7 +54,10 @@ public class EventAwareRegions {
 			String s[] = nextLine.split(" ");
 			int i = Integer.parseInt(s[0]);
 			int j = Integer.parseInt(s[1]);
-			//int region_id = Double.parseDouble(s[3]);
+			int num = Integer.parseInt(s[2]);
+			int region_id = Integer.parseInt(s[3]);
+			Cell c = new Cell(i,j,num,region_id);
+			cells.add(c);
 			
 			
 		}
