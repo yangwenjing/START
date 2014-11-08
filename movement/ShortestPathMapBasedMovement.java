@@ -34,6 +34,11 @@ public class ShortestPathMapBasedMovement extends MapBasedMovement implements
 				settings, rng);
 	}
 	
+	public DijkstraPathFinder getPathFinder()
+	{
+		return this.pathFinder;
+	}
+	
 	/**
 	 * Copyconstructor.
 	 * @param mbm The ShortestPathMapBasedMovement prototype to base 
