@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -34,6 +35,9 @@ public class EventAwareRegions {
 	 * 将地图点与region对应 
 	 * 一个regionid 对应多个mapid
 	 * 得到regionid就可以找到一个map node
+	 * 
+	 * key: region_id;
+	 * 
 	 */
 	public Hashtable<Integer,List<MapNode>> region2MapNode= null;
 	
@@ -52,6 +56,8 @@ public class EventAwareRegions {
 				
 	}
 	
+	
+	
 	public EventAwareRegions(int event){
 		this.event = event;
 		this.xy2Cell = new Hashtable<String, Cell>();
@@ -59,6 +65,96 @@ public class EventAwareRegions {
 		this.cells = new ArrayList<Cell>();
 		
 
+	}
+	
+	public MapNode getDestinationMapNode(Cell from, double distance)
+	{
+		int region_to = findRegionIdInDis(from, distance/Math.sqrt(2));
+		
+		if(this.region2MapNode==null)
+		{
+			loadRegion2MapNode();
+		}
+		
+		List<MapNode> mapNodes = this.region2MapNode.get(region_to);
+		int index = rng.nextInt(mapNodes.size()-1);
+		return mapNodes.get(index);
+	}
+	
+	private void loadRegion2MapNode() {
+		// TODO 对region2MapNode初始化
+		
+		
+	}
+
+
+
+	public static double getDistance(Cell c1, Cell c2)
+	{
+		double sum = Math.pow((c1.x-c2.x)*grid_x_length, 2)+Math.pow((c1.y-c2.y)*grid_y_length, 2);
+		return Math.sqrt(sum);
+	}
+	
+	public int findRegionIdInDis(Cell c, double distance)
+	{
+		int x_tix = (int)(distance/grid_x_length);
+		int y_tix = (int) (distance/grid_y_length);
+		int x_min = (c.x-x_tix)>=0?(c.x-x_tix):0;
+		int x_max = (c.x+x_tix)<=99?(c.x+x_tix):99;
+		int y_min = (c.y-y_tix)>=0?(c.y-y_tix):0;
+		int y_max = (c.y+y_tix)<=99?(c.y+y_tix):99;
+		
+		
+		List<Cell>cells_temp = new LinkedList<Cell>();
+		List<FromToProb> ftblist_temp = new LinkedList<FromToProb>();
+		
+		int x=x_min;
+		int y=y_min;
+		while(x<=x_max)
+		{
+			while(y<=y_max)
+			{
+				Cell cell2 = this.xy2Cell.get(getKey(x,y));
+				if(getDistance(c,cell2)>distance)
+					continue;
+				cells_temp.add(cell2);
+				String ft_key = getKey(c.region_id, cell2.region_id);
+				FromToProb ftb = this.transition_prob.get(ft_key);
+				if(ftblist_temp.contains(ftb))
+					continue;
+				ftblist_temp.add(ftb);
+				y++;
+			}
+			x++;
+		}
+		
+		Collections.sort(ftblist_temp);
+		FromToProb ftb_selected=null; 
+		while(ftb_selected==null)
+		{
+			ftb_selected=randSelectARegion(ftblist_temp);
+		}
+		
+		return ftb_selected.to;
+	}
+
+
+
+	private FromToProb randSelectARegion(List<FromToProb> ftblist_temp) {
+		double cumulativeprob = 0;
+		double result = rng.nextDouble();
+		FromToProb ftb_selected=null;
+		for(FromToProb ftb:ftblist_temp)
+		{
+			cumulativeprob+=ftb.probability;
+			if(cumulativeprob>result)
+			{
+				ftb_selected = ftb;
+				break;
+			}
+		}
+		
+		return ftb_selected;
 	}
 	
 	private void loadCells() {
