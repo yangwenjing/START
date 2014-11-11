@@ -11,10 +11,14 @@ import java.util.Random;
 import java.util.Scanner;
 
 import movement.map.MapNode;
+import movement.map.SimMap;
+import core.Coord;
 import core.SettingsError;
 
 public class EventAwareRegions {
 	public static int event;
+	/** 需要获得初始化的 map */
+	public static SimMap map;
 	
 	/** 用于从坐标 x,y 到cell的映射  */
 	private Hashtable <String, Cell>xy2Cell;
@@ -82,9 +86,25 @@ public class EventAwareRegions {
 	}
 	
 	private void loadRegion2MapNode() {
+		this.region2MapNode = new Hashtable<Integer, List<MapNode>>();
 		// TODO 对region2MapNode初始化
-		
-		
+		for(MapNode mn:map.getNodes())
+		{
+			Coord c = mn.getLocation();
+			int x = (int) (c.getX()/grid_x_length);
+			int y = (int) (c.getY()/grid_y_length);
+			
+			String key = getKey(x,y);
+			Cell cell = this.xy2Cell.get(key);
+			if(!this.region2MapNode.contains(cell.region_id))
+			{
+				List<MapNode> mnList = new ArrayList<MapNode>();
+				this.region2MapNode.put(cell.region_id, mnList);
+			}
+				
+			this.region2MapNode.get(cell.region_id).add(mn);
+			
+		}
 	}
 
 
