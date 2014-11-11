@@ -56,8 +56,7 @@ public class EventAwareRegions {
 	{
 		List<MapNode>nodes = this.region2MapNode.get(region_id);
 		int index = rng.nextInt(nodes.size());
-		return nodes.get(index);
-				
+		return nodes.get(index);				
 	}
 	
 	
@@ -67,13 +66,24 @@ public class EventAwareRegions {
 		this.xy2Cell = new Hashtable<String, Cell>();
 		this.transition_prob = new Hashtable<String, FromToProb>();
 		this.cells = new ArrayList<Cell>();
-		
-
 	}
 	
-	public MapNode getDestinationMapNode(Cell from, double distance)
+	public List<MapNode> mapNodes_in(List<MapNode> mapNodes,List<Cell>cells_in)
 	{
-		int region_to = findRegionIdInDis(from, distance/Math.sqrt(2));
+		List<MapNode> valid_mapNodes = new ArrayList<MapNode>();
+		for(MapNode mn:mapNodes)
+		{
+			Cell cell = fromMN2Cell(mn);
+			if(cells_in.contains(cell))
+				valid_mapNodes.add(mn);
+		}
+		return valid_mapNodes;
+	}
+	
+	
+	public MapNode getDestinationMapNode(int region_to, List<Cell>cells_in)
+	{
+		//int region_to = findRegionIdInDis(from, distance/Math.sqrt(2));
 		
 		if(this.region2MapNode==null)
 		{
@@ -81,21 +91,20 @@ public class EventAwareRegions {
 		}
 		
 		List<MapNode> mapNodes = this.region2MapNode.get(region_to);
-		int index = rng.nextInt(mapNodes.size()-1);
-		return mapNodes.get(index);
+		List<MapNode> valid_mapNodes = mapNodes_in(mapNodes,cells_in);
+		
+		int index = rng.nextInt(valid_mapNodes.size()-1);
+		return valid_mapNodes.get(index);
 	}
+	
+	
 	
 	private void loadRegion2MapNode() {
 		this.region2MapNode = new Hashtable<Integer, List<MapNode>>();
 		// TODO ∂‘region2MapNode≥ı ºªØ
 		for(MapNode mn:map.getNodes())
 		{
-			Coord c = mn.getLocation();
-			int x = (int) (c.getX()/grid_x_length);
-			int y = (int) (c.getY()/grid_y_length);
-			
-			String key = getKey(x,y);
-			Cell cell = this.xy2Cell.get(key);
+			Cell cell = fromMN2Cell(mn);
 			if(!this.region2MapNode.contains(cell.region_id))
 			{
 				List<MapNode> mnList = new ArrayList<MapNode>();
@@ -109,13 +118,25 @@ public class EventAwareRegions {
 
 
 
+	private Cell fromMN2Cell(MapNode mn) {
+		Coord c = mn.getLocation();
+		int x = (int) (c.getX()/grid_x_length);
+		int y = (int) (c.getY()/grid_y_length);
+		
+		String key = getKey(x,y);
+		Cell cell = this.xy2Cell.get(key);
+		return cell;
+	}
+
+
+
 	public static double getDistance(Cell c1, Cell c2)
 	{
 		double sum = Math.pow((c1.x-c2.x)*grid_x_length, 2)+Math.pow((c1.y-c2.y)*grid_y_length, 2);
 		return Math.sqrt(sum);
 	}
 	
-	public int findRegionIdInDis(Cell c, double distance)
+	public MapNode findMapNodeInDis(Cell c, double distance)
 	{
 		int x_tix = (int)(distance/grid_x_length);
 		int y_tix = (int) (distance/grid_y_length);
@@ -155,7 +176,8 @@ public class EventAwareRegions {
 			ftb_selected=randSelectARegion(ftblist_temp);
 		}
 		
-		return ftb_selected.to;
+		
+		return getDestinationMapNode(ftb_selected.to, cells_temp);
 	}
 
 
