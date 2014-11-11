@@ -221,5 +221,28 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		
 	}
 	
+	/**
+	 * 生成速度
+	 */
+	protected double generateSpeed(double status)
+	{
+		// TODO get speed by the status
+		if(status==0)
+			return generateSpeedForStatus0();
+		else
+			return generateSpeedForStatus1();
+			
+	}
 
+	private double generateSpeedForStatus0() {
+		
+
+		return 0;
+	}
+	
+	private double generateSpeedForStatus1() {
+
+		
+		return 0;
+	}
 }
