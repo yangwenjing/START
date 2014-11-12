@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import movement.map.MapNode;
+import movement.map.SimMap;
 import core.Coord;
 import core.Settings;
 import core.SimClock;
@@ -51,18 +52,19 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		super(settings);
 		// TODO Auto-generated constructor stub
 		this.status = rng.nextInt(2);
+		
 		if(event_regions==null)
-			initEventRegions();
+			initEventRegions(this.getMap());
 	}
 	
-	public static void initEventRegions()
+	public static void initEventRegions(SimMap map)
 	{
 		Settings settings = new Settings(STARTMOVEMENT_NS);
 
 		event_regions[0] = new EventAwareRegions(0,settings.getSetting(CELLS_0),
-				settings.getSetting(TRANSITION_PROB_0));
+				settings.getSetting(TRANSITION_PROB_0),map);
 		event_regions[1] = new EventAwareRegions(1,settings.getSetting(CELLS_1),
-				settings.getSetting(TRANSITION_PROB_1));
+				settings.getSetting(TRANSITION_PROB_1),map);
 	}
 
 	/**

@@ -18,7 +18,7 @@ import core.SettingsError;
 public class EventAwareRegions {
 	public static int event;
 	/** 需要获得初始化的 map */
-	public static SimMap map;
+	public static SimMap map=null;
 	
 	/** 用于从坐标 x,y 到cell的映射  */
 	private Hashtable <String, Cell>xy2Cell;
@@ -79,7 +79,7 @@ public class EventAwareRegions {
 	}
 	
 	
-	public EventAwareRegions(int event, String cellsFile, String transFile){
+	public EventAwareRegions(int event, String cellsFile, String transFile, SimMap m){
 		this.event = event;
 		this.xy2Cell = new Hashtable<String, Cell>();
 		this.transition_prob = new Hashtable<String, FromToProb>();
@@ -87,6 +87,7 @@ public class EventAwareRegions {
 		this.sum_events = 0;
 		this.Area_matrix_inputFileName = cellsFile;
 		this.Transition_probability_inputFileName = transFile;
+		if(map==null)map = m;
 	}
 	
 	public List<MapNode> mapNodes_in(List<MapNode> mapNodes,List<Cell>cells_in)
@@ -239,12 +240,14 @@ public class EventAwareRegions {
 			String s[] = nextLine.split(" ");
 			int i = Integer.parseInt(s[0]);
 			int j = Integer.parseInt(s[1]);
+			if(i<10||j<10||i>=90||j>=90)
+				continue;
 			int num = Integer.parseInt(s[2]);
 			int region_id = Integer.parseInt(s[3]);
-			Cell c = new Cell(i,j,num,region_id);
+			Cell c = new Cell(i-10,j-10,num,region_id);
 			this.cells.add(c);
 			this.sum_events+=num;
-			String key = getKey(i, j);
+			String key = getKey(i-10, j-10);
 			this.xy2Cell.put(key, c);
 			
 			
