@@ -300,7 +300,7 @@ public class EventAwareRegions {
 	public int getRegionIdByLocation(double lon,double lat)
 	{
 		int x = (int)((lon-area_left)/grid_x_length);
-		int y = (int)((lat-area_right)/grid_y_length);
+		int y = (int)((lat-area_top)/grid_y_length);
 		String key = getKey(x,y);
 		
 		
