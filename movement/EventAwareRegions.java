@@ -46,9 +46,9 @@ public class EventAwareRegions {
 	public Hashtable<Integer,List<MapNode>> region2MapNode= null;
 	
 	private static final double area_left=0;
-	private static final double area_right=1;
+	private static final double area_right=30557.1976136548;
 	private static final double area_top=0;
-	private static final double area_bottom=1;
+	private static final double area_bottom=29480.147425641;
 	private static final double grid_x_length=(area_right-area_left)/100.0;
 	private static final double grid_y_length=(area_bottom-area_top)/100.0;
 	
