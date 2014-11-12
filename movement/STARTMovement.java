@@ -57,7 +57,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	
 	@Override
 	public Path getPath() {
-		this.speed = generateSpeed();
+		this.speed = generateSpeed(this.status);
 		Path p = new Path(speed);
 		/**
 		 * TODO:在这里实现
@@ -78,7 +78,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		}
 		
 		lastMapNode = to;
-		
+		this.status=this.status==0?1:0;//改变车辆状态。
 		return p;
 	}	
 	
@@ -235,14 +235,49 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	}
 
 	private double generateSpeedForStatus0() {
-		
+		double  prob = Math.random();
+		while(prob>cumulativeSpeedDistributionForStatus0(120))
+		{
+			prob = Math.random();
+		}
+		int speed = 0; 
+		while(prob>cumulativeSpeedDistributionForStatus0(speed))
+		{
+			speed++;
+		}
 
-		return 0;
+		return speed;
 	}
 	
 	private double generateSpeedForStatus1() {
 
-		
-		return 0;
+		double  prob = Math.random();
+		while(prob>cumulativeSpeedDistributionForStatus1(120))
+		{
+			prob = Math.random();
+		}
+		int speed = 0; 
+		while(prob>cumulativeSpeedDistributionForStatus1(speed))
+		{
+			speed++;
+		}
+
+		return speed;
+	}
+	
+	private double cumulativeSpeedDistributionForStatus0(int v)
+	{
+		if(v<0)return 0.0;
+		if(v<=40) return 0.0059774*v+0.660763;
+		if(v<=120) return 1.0-Math.exp(-0.0644895*v+0.383622);		
+		return 1.0;
+	}
+	
+	private double cumulativeSpeedDistributionForStatus1(int v)
+	{
+		if(v<0) return 0;
+		if(v<=40) return 0.0127845*v+0.217714;
+		if(v<=120) return 1.0-Math.exp(-0.0642494*v+1.45314);
+		return 1.0;
 	}
 }
