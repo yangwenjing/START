@@ -52,7 +52,7 @@ public class EventAwareRegions {
 	private static final double grid_x_length=(area_right-area_left)/100.0;
 	private static final double grid_y_length=(area_bottom-area_top)/100.0;
 	
-	public MapNode getMapNodeByRegion(int region_id)
+	private MapNode getMapNodeByRegion(int region_id)
 	{
 		List<MapNode>nodes = this.region2MapNode.get(region_id);
 		int index = rng.nextInt(nodes.size());
@@ -81,9 +81,8 @@ public class EventAwareRegions {
 	}
 	
 	
-	public MapNode getDestinationMapNode(int region_to, List<Cell>cells_in)
+	private MapNode getDestinationMapNode(int region_to, List<Cell>cells_in)
 	{
-		//int region_to = findRegionIdInDis(from, distance/Math.sqrt(2));
 		
 		if(this.region2MapNode==null)
 		{
@@ -136,8 +135,10 @@ public class EventAwareRegions {
 		return Math.sqrt(sum);
 	}
 	
-	public MapNode findMapNodeInDis(Cell c, double distance)
+	public MapNode findMapNodeInDis(Coord coord, double distance)
 	{
+		String ckey = getKey((int)(coord.getX()/grid_x_length),(int)(coord.getY()/grid_y_length));
+		Cell c = this.xy2Cell.get(ckey);
 		int x_tix = (int)(distance/grid_x_length);
 		int y_tix = (int) (distance/grid_y_length);
 		int x_min = (c.x-x_tix)>=0?(c.x-x_tix):0;

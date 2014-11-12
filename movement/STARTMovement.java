@@ -38,6 +38,8 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	private static double DURATION_A_FOR_STATUS1 = 0.988955;
 	private static double DURATION_PARA_FOR_STATUS1 = 0.00103644;
 		
+	private static EventAwareRegions[] event_regions;
+	
 
 	/**
 	 * @param settings
@@ -65,8 +67,10 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		 * 2.获取path
 		 * 3.将path返回
 		 */
-		MapNode to = selectDestination();
+		this.setTimer();
 		
+		MapNode to = event_regions[this.status].findMapNodeInDis(this.lastMapNode.getLocation(), 
+				this.speed*this.duration);
 		List<MapNode> nodePath = getPathFinder().getShortestPath(lastMapNode, to);
 		
 		// this assertion should never fire if the map is checked in read phase
@@ -135,8 +139,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	}
 	private double generateLastingTime(int status)
 	{
-		Random rd1 = new Random();
-		double seed =  rd1.nextDouble();
+		double seed =  Math.random();
 		if(status==0)
 			return generateLastingTimeForStatus0(seed);
 		else
