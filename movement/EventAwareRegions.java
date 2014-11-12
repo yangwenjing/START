@@ -28,8 +28,8 @@ public class EventAwareRegions {
 	
 	
 	/**记录 cell中的事件数，用于初始位置的选择 */
-	private List cells;
-	
+	private List<Cell> cells;
+	private int sum_events;
 	public String Area_matrix_inputFileName;
 	public String Transition_probability_inputFileName;
 	public static Random rng = new Random();
@@ -59,6 +59,24 @@ public class EventAwareRegions {
 		return nodes.get(index);				
 	}
 	
+	public MapNode getInitMapNode()
+	{
+		
+		double result = Math.random();
+		double prob = 0;
+		for(Cell c:this.cells)
+		{
+			prob += (double)c.num/(double)this.sum_events; 
+			if(result<prob)
+			{
+				List<Cell> initcells = new ArrayList<Cell>(1);
+				initcells.add(c);
+				return getDestinationMapNode(c.region_id,initcells);
+			}
+		}
+		List<MapNode> nodes = map.getNodes();
+		return nodes.get(rng.nextInt(nodes.size()));
+	}
 	
 	
 	public EventAwareRegions(int event){
@@ -66,6 +84,7 @@ public class EventAwareRegions {
 		this.xy2Cell = new Hashtable<String, Cell>();
 		this.transition_prob = new Hashtable<String, FromToProb>();
 		this.cells = new ArrayList<Cell>();
+		this.sum_events = 0;
 	}
 	
 	public List<MapNode> mapNodes_in(List<MapNode> mapNodes,List<Cell>cells_in)
@@ -221,8 +240,8 @@ public class EventAwareRegions {
 			int num = Integer.parseInt(s[2]);
 			int region_id = Integer.parseInt(s[3]);
 			Cell c = new Cell(i,j,num,region_id);
-			cells.add(c);
-			
+			this.cells.add(c);
+			this.sum_events+=num;
 			String key = getKey(i, j);
 			this.xy2Cell.put(key, c);
 			
@@ -230,7 +249,7 @@ public class EventAwareRegions {
 		}
 		System.out.println("fininsh loading transition prob...");
 		scanner.close();
-			
+		Collections.sort(this.cells);	
 	}
 	
 	/**

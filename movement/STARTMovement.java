@@ -23,8 +23,6 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	/** 判断是否超过持续时长 */
 	private int timer;
 	
-	private static Regions regions=null;
-	
 	/** 记录节点的速度 */
 	private double speed;
 	/** 记录节点的持续时长 */
@@ -47,6 +45,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	public STARTMovement(Settings settings) {
 		super(settings);
 		// TODO Auto-generated constructor stub
+		this.status = rng.nextInt(2);
 	}
 
 	/**
@@ -57,16 +56,18 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		// TODO Auto-generated constructor stub
 	}
 	
+	
+	/**
+	 * 在这里实现
+	 * 1.找到目的节点
+	 * 2.获取path
+	 * 3.将path返回
+	 */
 	@Override
 	public Path getPath() {
 		this.speed = generateSpeed(this.status);
 		Path p = new Path(speed);
-		/**
-		 * TODO:在这里实现
-		 * 1.找到目的节点
-		 * 2.获取path
-		 * 3.将path返回
-		 */
+
 		this.setTimer();
 		
 		MapNode to = event_regions[this.status].findMapNodeInDis(this.lastMapNode.getLocation(), 
@@ -87,49 +88,16 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	}	
 	
 	
+	/**
+	 * 初始化节点位置
+	 * 在DTNHost中被调用
+	 */
 	@Override
 	public Coord getInitialLocation() {
-		/**
-		 * 初始化节点位置
-		 * 在DTNHost中被调用
-		 */
-		List<MapNode> nodes = getMap().getNodes();
-		MapNode n,n2;
-		Coord n2Location, nLocation, placement;
-		double dx, dy;
-		double rnd = rng.nextDouble();
-		
-		// choose a random node (from OK types if such are defined)
-		//do {
-			n = nodes.get(rng.nextInt(nodes.size()));
-		//} while (okMapNodeTypes != null && !n.isType(okMapNodeTypes));
-		
-		// choose a random neighbor of the selected node
-		n2 = n.getNeighbors().get(rng.nextInt(n.getNeighbors().size())); 
-		
-		nLocation = n.getLocation();
-		n2Location = n2.getLocation();
-		
-		placement = n.getLocation().clone();
-		
-		dx = rnd * (n2Location.getX() - nLocation.getX());
-		dy = rnd * (n2Location.getY() - nLocation.getY());
-		
-		placement.translate(dx, dy); // move coord from n towards n2
-		
-		this.lastMapNode = n;
-		return placement;
-	}
-	
-	/**
-	 * 由现有的lastMapNode找到目的节点
-	 * @return 目的MapNode节点
-	 */
-	public MapNode selectDestination()
-	{
-		//TODO:设置如何写timer
-		return null;
-		
+
+		MapNode node = this.event_regions[this.status].getInitMapNode();
+		this.lastMapNode = node;
+		return this.lastMapNode.getLocation();
 	}
 	
 	private void setTimer() {
