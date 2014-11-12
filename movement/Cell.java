@@ -25,4 +25,5 @@ public class Cell implements Comparable<Cell>{
 		return this.num>=arg0.num?-1:1;
 	}
 	
+	
 }

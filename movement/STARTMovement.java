@@ -23,8 +23,6 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	/** 判断是否超过持续时长 */
 	private int timer;
 	
-	private static Regions regions=null;
-	
 	/** 记录节点的速度 */
 	private double speed;
 	/** 记录节点的持续时长 */
@@ -38,6 +36,8 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	private static double DURATION_A_FOR_STATUS1 = 0.988955;
 	private static double DURATION_PARA_FOR_STATUS1 = 0.00103644;
 		
+	private static EventAwareRegions[] event_regions;
+	
 
 	/**
 	 * @param settings
@@ -45,6 +45,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	public STARTMovement(Settings settings) {
 		super(settings);
 		// TODO Auto-generated constructor stub
+		this.status = rng.nextInt(2);
 	}
 
 	/**
@@ -55,18 +56,22 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		// TODO Auto-generated constructor stub
 	}
 	
+	
+	/**
+	 * 在这里实现
+	 * 1.找到目的节点
+	 * 2.获取path
+	 * 3.将path返回
+	 */
 	@Override
 	public Path getPath() {
-		this.speed = generateSpeed();
+		this.speed = generateSpeed(this.status);
 		Path p = new Path(speed);
-		/**
-		 * TODO:在这里实现
-		 * 1.找到目的节点
-		 * 2.获取path
-		 * 3.将path返回
-		 */
-		MapNode to = selectDestination();
+
+		this.setTimer();
 		
+		MapNode to = event_regions[this.status].findMapNodeInDis(this.lastMapNode.getLocation(), 
+				this.speed*this.duration);
 		List<MapNode> nodePath = getPathFinder().getShortestPath(lastMapNode, to);
 		
 		// this assertion should never fire if the map is checked in read phase
@@ -78,54 +83,21 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		}
 		
 		lastMapNode = to;
-		
+		this.status=this.status==0?1:0;//改变车辆状态。
 		return p;
 	}	
 	
 	
+	/**
+	 * 初始化节点位置
+	 * 在DTNHost中被调用
+	 */
 	@Override
 	public Coord getInitialLocation() {
-		/**
-		 * 初始化节点位置
-		 * 在DTNHost中被调用
-		 */
-		List<MapNode> nodes = getMap().getNodes();
-		MapNode n,n2;
-		Coord n2Location, nLocation, placement;
-		double dx, dy;
-		double rnd = rng.nextDouble();
-		
-		// choose a random node (from OK types if such are defined)
-		//do {
-			n = nodes.get(rng.nextInt(nodes.size()));
-		//} while (okMapNodeTypes != null && !n.isType(okMapNodeTypes));
-		
-		// choose a random neighbor of the selected node
-		n2 = n.getNeighbors().get(rng.nextInt(n.getNeighbors().size())); 
-		
-		nLocation = n.getLocation();
-		n2Location = n2.getLocation();
-		
-		placement = n.getLocation().clone();
-		
-		dx = rnd * (n2Location.getX() - nLocation.getX());
-		dy = rnd * (n2Location.getY() - nLocation.getY());
-		
-		placement.translate(dx, dy); // move coord from n towards n2
-		
-		this.lastMapNode = n;
-		return placement;
-	}
-	
-	/**
-	 * 由现有的lastMapNode找到目的节点
-	 * @return 目的MapNode节点
-	 */
-	public MapNode selectDestination()
-	{
-		//TODO:设置如何写timer
-		return null;
-		
+
+		MapNode node = this.event_regions[this.status].getInitMapNode();
+		this.lastMapNode = node;
+		return this.lastMapNode.getLocation();
 	}
 	
 	private void setTimer() {
@@ -135,8 +107,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	}
 	private double generateLastingTime(int status)
 	{
-		Random rd1 = new Random();
-		double seed =  rd1.nextDouble();
+		double seed =  Math.random();
 		if(status==0)
 			return generateLastingTimeForStatus0(seed);
 		else
@@ -221,5 +192,63 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		
 	}
 	
+	/**
+	 * 生成速度
+	 */
+	protected double generateSpeed(double status)
+	{
+		// TODO get speed by the status
+		if(status==0)
+			return generateSpeedForStatus0();
+		else
+			return generateSpeedForStatus1();
+			
+	}
 
+	private double generateSpeedForStatus0() {
+		double  prob = Math.random();
+		while(prob>cumulativeSpeedDistributionForStatus0(120))
+		{
+			prob = Math.random();
+		}
+		int speed = 0; 
+		while(prob>cumulativeSpeedDistributionForStatus0(speed))
+		{
+			speed++;
+		}
+
+		return speed;
+	}
+	
+	private double generateSpeedForStatus1() {
+
+		double  prob = Math.random();
+		while(prob>cumulativeSpeedDistributionForStatus1(120))
+		{
+			prob = Math.random();
+		}
+		int speed = 0; 
+		while(prob>cumulativeSpeedDistributionForStatus1(speed))
+		{
+			speed++;
+		}
+
+		return speed;
+	}
+	
+	private double cumulativeSpeedDistributionForStatus0(int v)
+	{
+		if(v<0)return 0.0;
+		if(v<=40) return 0.0059774*v+0.660763;
+		if(v<=120) return 1.0-Math.exp(-0.0644895*v+0.383622);		
+		return 1.0;
+	}
+	
+	private double cumulativeSpeedDistributionForStatus1(int v)
+	{
+		if(v<0) return 0;
+		if(v<=40) return 0.0127845*v+0.217714;
+		if(v<=120) return 1.0-Math.exp(-0.0642494*v+1.45314);
+		return 1.0;
+	}
 }
