@@ -36,8 +36,13 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	private static double DURATION_A_FOR_STATUS1 = 0.988955;
 	private static double DURATION_PARA_FOR_STATUS1 = 0.00103644;
 		
-	private static EventAwareRegions[] event_regions;
+	private static EventAwareRegions[] event_regions=null;
 	
+	public static final String TRANSITION_PROB_0 = "TransProbFile0";
+	public static final String TRANSITION_PROB_1 = "TransProbFile1";
+	public static final String CELLS_0 = "Cell0";
+	public static final String CELLS_1 = "Cell1";
+	public static final String STARTMOVEMENT_NS = "STARTMovement";
 
 	/**
 	 * @param settings
@@ -46,12 +51,24 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		super(settings);
 		// TODO Auto-generated constructor stub
 		this.status = rng.nextInt(2);
+		if(event_regions==null)
+			initEventRegions();
+	}
+	
+	public static void initEventRegions()
+	{
+		Settings settings = new Settings(STARTMOVEMENT_NS);
+
+		event_regions[0] = new EventAwareRegions(0,settings.getSetting(CELLS_0),
+				settings.getSetting(TRANSITION_PROB_0));
+		event_regions[1] = new EventAwareRegions(1,settings.getSetting(CELLS_1),
+				settings.getSetting(TRANSITION_PROB_1));
 	}
 
 	/**
 	 * @param mbm
 	 */
-	public STARTMovement(ShortestPathMapBasedMovement mbm) {
+	public STARTMovement(STARTMovement mbm) {
 		super(mbm);
 		// TODO Auto-generated constructor stub
 	}
