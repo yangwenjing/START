@@ -79,7 +79,7 @@ public class EventAwareRegions {
 	}
 	
 	
-	public EventAwareRegions(int event, String cellsFile, String transFile, SimMap m){
+	public EventAwareRegions(int event, String cellsFile, String transFile){
 		this.event = event;
 		this.xy2Cell = new Hashtable<String, Cell>();
 		this.transition_prob = new Hashtable<String, FromToProb>();
@@ -87,7 +87,6 @@ public class EventAwareRegions {
 		this.sum_events = 0;
 		this.Area_matrix_inputFileName = cellsFile;
 		this.Transition_probability_inputFileName = transFile;
-		if(map==null)map = m;
 	}
 	
 	public List<MapNode> mapNodes_in(List<MapNode> mapNodes,List<Cell>cells_in)

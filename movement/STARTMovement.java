@@ -43,7 +43,6 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	public static final String TRANSITION_PROB_1 = "TransProbFile1";
 	public static final String CELLS_0 = "Cell0";
 	public static final String CELLS_1 = "Cell1";
-	public static final String STARTMOVEMENT_NS = "STARTMovement";
 
 	/**
 	 * @param settings
@@ -53,18 +52,20 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		// TODO Auto-generated constructor stub
 		this.status = rng.nextInt(2);
 		
-		if(event_regions==null)
-			initEventRegions(this.getMap());
+		EventAwareRegions.map = getMap();
+		initEventRegions(settings);
 	}
 	
-	public static void initEventRegions(SimMap map)
+	public static void initEventRegions(Settings settings)
 	{
-		Settings settings = new Settings(STARTMOVEMENT_NS);
-
+		if(event_regions!=null)return;
+		System.out.println("初始化两个区域");
+		
+		event_regions = new EventAwareRegions[2];
 		event_regions[0] = new EventAwareRegions(0,settings.getSetting(CELLS_0),
-				settings.getSetting(TRANSITION_PROB_0),map);
+				settings.getSetting(TRANSITION_PROB_0));
 		event_regions[1] = new EventAwareRegions(1,settings.getSetting(CELLS_1),
-				settings.getSetting(TRANSITION_PROB_1),map);
+				settings.getSetting(TRANSITION_PROB_1));
 	}
 
 	/**
