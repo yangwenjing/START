@@ -87,8 +87,9 @@ public class EventAwareRegions {
 		this.sum_events = 0;
 		this.Area_matrix_inputFileName = cellsFile;
 		this.Transition_probability_inputFileName = transFile;
-		loadRegion2MapNode();
 		loadCells();
+		loadRegion2MapNode();
+		
 		
 		
 	}
@@ -108,9 +109,7 @@ public class EventAwareRegions {
 	
 	private MapNode getDestinationMapNode(int region_to, List<Cell>cells_in)
 	{
-		
 
-		
 		List<MapNode> mapNodes = this.region2MapNode.get(region_to);
 		List<MapNode> valid_mapNodes = mapNodes_in(mapNodes,cells_in);
 		
@@ -123,6 +122,7 @@ public class EventAwareRegions {
 	private void loadRegion2MapNode() {
 		this.region2MapNode = new Hashtable<Integer, List<MapNode>>();
 		// TODO ¶Ôregion2MapNode³õÊ¼»¯
+		System.out.println("LoadRegions to MapNode");
 		for(MapNode mn:map.getNodes())
 		{
 			Cell cell = fromMN2Cell(mn);
@@ -164,9 +164,9 @@ public class EventAwareRegions {
 		int x_tix = (int)(distance/grid_x_length);
 		int y_tix = (int) (distance/grid_y_length);
 		int x_min = (c.x-x_tix)>=0?(c.x-x_tix):0;
-		int x_max = (c.x+x_tix)<=99?(c.x+x_tix):99;
+		int x_max = (c.x+x_tix)<=79?(c.x+x_tix):79;
 		int y_min = (c.y-y_tix)>=0?(c.y-y_tix):0;
-		int y_max = (c.y+y_tix)<=99?(c.y+y_tix):99;
+		int y_max = (c.y+y_tix)<=79?(c.y+y_tix):79;
 		
 		
 		List<Cell>cells_temp = new LinkedList<Cell>();
@@ -224,7 +224,8 @@ public class EventAwareRegions {
 	
 	private void loadCells() {
 		// TODO Auto-generated method stub
-		File inFile = new File(Transition_probability_inputFileName);
+		File inFile = new File(Area_matrix_inputFileName);
+		System.out.println("begin loading cells and region...");
 		Scanner scanner;
 		try {
 			scanner = new Scanner(inFile);
@@ -237,7 +238,9 @@ public class EventAwareRegions {
 		{
 			
 			String nextLine = scanner.nextLine().trim();
-			String s[] = nextLine.split(" ");
+		
+			String s[] = nextLine.split("\t");
+			if(s.length<4)continue;
 			int i = Integer.parseInt(s[0]);
 			int j = Integer.parseInt(s[1]);
 			if(i<10||j<10||i>=90||j>=90)
@@ -252,7 +255,7 @@ public class EventAwareRegions {
 			
 			
 		}
-		System.out.println("fininsh loading transition prob...");
+		System.out.println("fininsh loading cells and region...");
 		scanner.close();
 		Collections.sort(this.cells);	
 	}
@@ -263,6 +266,7 @@ public class EventAwareRegions {
 	private void loadTransitionProb() {
 		// TODO Auto-generated method stub
 		File inFile = new File(Transition_probability_inputFileName);
+		System.out.println("begin loading transition prob...");
 		Scanner scanner;
 		try {
 			scanner = new Scanner(inFile);
@@ -274,10 +278,10 @@ public class EventAwareRegions {
 		while(scanner.hasNextLine())
 		{
 			String nextLine = scanner.nextLine().trim();
-			String s[] = nextLine.split(" ");
-			int i = Integer.parseInt(s[0]);
-			int j = Integer.parseInt(s[1]);
-			double p = Double.parseDouble(s[2]);
+			String s[] = nextLine.split("\t");
+			int i = Integer.parseInt(s[1]);
+			int j = Integer.parseInt(s[2]);
+			double p = Double.parseDouble(s[3]);
 			String key = getKey(i,j);
 			FromToProb ftp = new FromToProb(i,j,p);
 			this.transition_prob.put(key, ftp);
