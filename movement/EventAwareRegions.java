@@ -87,6 +87,10 @@ public class EventAwareRegions {
 		this.sum_events = 0;
 		this.Area_matrix_inputFileName = cellsFile;
 		this.Transition_probability_inputFileName = transFile;
+		loadRegion2MapNode();
+		loadCells();
+		
+		
 	}
 	
 	public List<MapNode> mapNodes_in(List<MapNode> mapNodes,List<Cell>cells_in)
@@ -105,10 +109,7 @@ public class EventAwareRegions {
 	private MapNode getDestinationMapNode(int region_to, List<Cell>cells_in)
 	{
 		
-		if(this.region2MapNode==null)
-		{
-			loadRegion2MapNode();
-		}
+
 		
 		List<MapNode> mapNodes = this.region2MapNode.get(region_to);
 		List<MapNode> valid_mapNodes = mapNodes_in(mapNodes,cells_in);
