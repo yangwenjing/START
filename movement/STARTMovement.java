@@ -76,6 +76,10 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		// TODO Auto-generated constructor stub
 	}
 	
+	private int reverseStatus(int status)
+	{
+		return status==1?0:1;
+	}
 	
 	/**
 	 * 在这里实现
@@ -89,8 +93,9 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		Path p = new Path(speed);
 
 		this.setTimer();
-		
-		MapNode to = event_regions[this.status].findMapNodeInDis(this.lastMapNode.getLocation(), 
+		Cell c = event_regions[this.status].fromMN2Cell(this.lastMapNode);
+		MapNode to = event_regions[reverseStatus(this.status)].findMapNodeInDis(this.lastMapNode.getLocation(),
+				c.region_id,
 				this.speed*this.duration);
 		List<MapNode> nodePath = getPathFinder().getShortestPath(lastMapNode, to);
 		
