@@ -14,9 +14,12 @@ import core.SimClock;
 
 /**
  * @author Yang Wenjing
- *
+ * 是 STARTMovement 的简化版本
+ * 1.区域不区分0,1状态，
+ * 2.区域转移概率只考虑状态变化的位置
+ * 3.速度将0,1统一考虑
  */
-public class STARTMovement extends ShortestPathMapBasedMovement {
+public class S_STARTMovement extends ShortestPathMapBasedMovement {
 	
 	/** 区分车辆状态 */
 	private int status;
@@ -47,7 +50,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	/**
 	 * @param settings
 	 */
-	public STARTMovement(Settings settings) {
+	public S_STARTMovement(Settings settings) {
 		super(settings);
 		// TODO Auto-generated constructor stub
 		this.status = rng.nextInt(2);
@@ -71,7 +74,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	/**
 	 * @param mbm
 	 */
-	public STARTMovement(STARTMovement mbm) {
+	public S_STARTMovement(S_STARTMovement mbm) {
 		super(mbm);
 		// TODO Auto-generated constructor stub
 	}
@@ -256,19 +259,25 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		return speed;
 	}
 	
+	/**
+	 * g(x) = 0.00792899*x+0.534121
+f(x) = 1-exp( -0.0644977*x+0.826339)
+	 * @param v
+	 * @return
+	 */
 	private double cumulativeSpeedDistributionForStatus0(int v)
 	{
 		if(v<0)return 0.0;
-		if(v<=40) return 0.0059774*v+0.660763;
-		if(v<=120) return 1.0-Math.exp(-0.0644895*v+0.383622);		
+		if(v<=40) return 0.00792899*v+0.534121;
+		if(v<=120) return 1.0-Math.exp(-0.0644977*v+0.826339);		
 		return 1.0;
 	}
 	
 	private double cumulativeSpeedDistributionForStatus1(int v)
 	{
 		if(v<0) return 0;
-		if(v<=40) return 0.0127845*v+0.217714;
-		if(v<=120) return 1.0-Math.exp(-0.0642494*v+1.45314);
+		if(v<=40) return 0.00792899*v+0.534121;
+		if(v<=120) return 1.0-Math.exp(-0.0644977*v+0.826339);
 		return 1.0;
 	}
 }

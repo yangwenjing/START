@@ -18,7 +18,7 @@ import core.SettingsError;
 public class EventAwareRegions {
 	public static int event;
 	/** 需要获得初始化的 map */
-	public static SimMap map;
+	public static SimMap map=null;
 	
 	/** 用于从坐标 x,y 到cell的映射  */
 	private Hashtable <String, Cell>xy2Cell;
@@ -46,9 +46,9 @@ public class EventAwareRegions {
 	public Hashtable<Integer,List<MapNode>> region2MapNode= null;
 	
 	private static final double area_left=0;
-	private static final double area_right=1;
+	private static final double area_right=30557.1976136548;
 	private static final double area_top=0;
-	private static final double area_bottom=1;
+	private static final double area_bottom=29480.147425641;
 	private static final double grid_x_length=(area_right-area_left)/100.0;
 	private static final double grid_y_length=(area_bottom-area_top)/100.0;
 	
@@ -87,6 +87,11 @@ public class EventAwareRegions {
 		this.sum_events = 0;
 		this.Area_matrix_inputFileName = cellsFile;
 		this.Transition_probability_inputFileName = transFile;
+		loadCells();
+		loadRegion2MapNode();
+		
+		
+		
 	}
 	
 	public List<MapNode> mapNodes_in(List<MapNode> mapNodes,List<Cell>cells_in)
@@ -104,12 +109,7 @@ public class EventAwareRegions {
 	
 	private MapNode getDestinationMapNode(int region_to, List<Cell>cells_in)
 	{
-		
-		if(this.region2MapNode==null)
-		{
-			loadRegion2MapNode();
-		}
-		
+
 		List<MapNode> mapNodes = this.region2MapNode.get(region_to);
 		List<MapNode> valid_mapNodes = mapNodes_in(mapNodes,cells_in);
 		
@@ -122,6 +122,7 @@ public class EventAwareRegions {
 	private void loadRegion2MapNode() {
 		this.region2MapNode = new Hashtable<Integer, List<MapNode>>();
 		// TODO 对region2MapNode初始化
+		System.out.println("LoadRegions to MapNode");
 		for(MapNode mn:map.getNodes())
 		{
 			Cell cell = fromMN2Cell(mn);
@@ -163,9 +164,9 @@ public class EventAwareRegions {
 		int x_tix = (int)(distance/grid_x_length);
 		int y_tix = (int) (distance/grid_y_length);
 		int x_min = (c.x-x_tix)>=0?(c.x-x_tix):0;
-		int x_max = (c.x+x_tix)<=99?(c.x+x_tix):99;
+		int x_max = (c.x+x_tix)<=79?(c.x+x_tix):79;
 		int y_min = (c.y-y_tix)>=0?(c.y-y_tix):0;
-		int y_max = (c.y+y_tix)<=99?(c.y+y_tix):99;
+		int y_max = (c.y+y_tix)<=79?(c.y+y_tix):79;
 		
 		
 		List<Cell>cells_temp = new LinkedList<Cell>();
@@ -223,7 +224,8 @@ public class EventAwareRegions {
 	
 	private void loadCells() {
 		// TODO Auto-generated method stub
-		File inFile = new File(Transition_probability_inputFileName);
+		File inFile = new File(Area_matrix_inputFileName);
+		System.out.println("begin loading cells and region...");
 		Scanner scanner;
 		try {
 			scanner = new Scanner(inFile);
@@ -236,20 +238,24 @@ public class EventAwareRegions {
 		{
 			
 			String nextLine = scanner.nextLine().trim();
-			String s[] = nextLine.split(" ");
+		
+			String s[] = nextLine.split("\t");
+			if(s.length<4)continue;
 			int i = Integer.parseInt(s[0]);
 			int j = Integer.parseInt(s[1]);
+			if(i<10||j<10||i>=90||j>=90)
+				continue;
 			int num = Integer.parseInt(s[2]);
 			int region_id = Integer.parseInt(s[3]);
-			Cell c = new Cell(i,j,num,region_id);
+			Cell c = new Cell(i-10,j-10,num,region_id);
 			this.cells.add(c);
 			this.sum_events+=num;
-			String key = getKey(i, j);
+			String key = getKey(i-10, j-10);
 			this.xy2Cell.put(key, c);
 			
 			
 		}
-		System.out.println("fininsh loading transition prob...");
+		System.out.println("fininsh loading cells and region...");
 		scanner.close();
 		Collections.sort(this.cells);	
 	}
@@ -260,6 +266,7 @@ public class EventAwareRegions {
 	private void loadTransitionProb() {
 		// TODO Auto-generated method stub
 		File inFile = new File(Transition_probability_inputFileName);
+		System.out.println("begin loading transition prob...");
 		Scanner scanner;
 		try {
 			scanner = new Scanner(inFile);
@@ -271,10 +278,10 @@ public class EventAwareRegions {
 		while(scanner.hasNextLine())
 		{
 			String nextLine = scanner.nextLine().trim();
-			String s[] = nextLine.split(" ");
-			int i = Integer.parseInt(s[0]);
-			int j = Integer.parseInt(s[1]);
-			double p = Double.parseDouble(s[2]);
+			String s[] = nextLine.split("\t");
+			int i = Integer.parseInt(s[1]);
+			int j = Integer.parseInt(s[2]);
+			double p = Double.parseDouble(s[3]);
 			String key = getKey(i,j);
 			FromToProb ftp = new FromToProb(i,j,p);
 			this.transition_prob.put(key, ftp);
@@ -297,7 +304,7 @@ public class EventAwareRegions {
 	public int getRegionIdByLocation(double lon,double lat)
 	{
 		int x = (int)((lon-area_left)/grid_x_length);
-		int y = (int)((lat-area_right)/grid_y_length);
+		int y = (int)((lat-area_top)/grid_y_length);
 		String key = getKey(x,y);
 		
 		
