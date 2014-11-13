@@ -98,17 +98,17 @@ Group.TransProbFile1 = data/transProb/201103_event1_11_14_rate.txt
 ## Reports - all report names have to be valid report classes
 
 # how many reports to load
-Report.nrofReports = 3
+Report.nrofReports = 1
 # length of the warm up period (simulated seconds)
 Report.warmup = 3600
 # default directory of reports (can be overridden per Report with output setting)
 Report.reportDir = reports/
 # Report classes to load
-Report.report1 = ContactTimesReport
+#Report.report1 = ContactTimesReport
 #Report.report1 = MessageStatsReport
-Report.report2 = InterContactTimesReport
-#Report.report1 = MovementReport
-Report.report3 = AdjacencyGraphvizReport
+#Report.report2 = InterContactTimesReport
+Report.report1 = MovementReport
+#Report.report3 = AdjacencyGraphvizReport
 
 
 ## Default settings for some routers settings
