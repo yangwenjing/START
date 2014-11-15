@@ -20,7 +20,6 @@ import core.SimClock;
  * 3.速度将0,1统一考虑
  */
 public class S_STARTMovement extends ShortestPathMapBasedMovement {
-	
 	/** 区分车辆状态 */
 	private int status;
 	
@@ -74,11 +73,15 @@ public class S_STARTMovement extends ShortestPathMapBasedMovement {
 	/**
 	 * @param mbm
 	 */
-	public S_STARTMovement(S_STARTMovement mbm) {
+	public S_STARTMovement(STARTMovement mbm) {
 		super(mbm);
 		// TODO Auto-generated constructor stub
 	}
 	
+	private int reverseStatus(int status)
+	{
+		return status==1?0:1;
+	}
 	
 	/**
 	 * 在这里实现
@@ -92,8 +95,9 @@ public class S_STARTMovement extends ShortestPathMapBasedMovement {
 		Path p = new Path(speed);
 
 		this.setTimer();
-		
-		MapNode to = event_regions[this.status].findMapNodeInDis(this.lastMapNode.getLocation(), 
+		Cell c = event_regions[this.status].fromMN2Cell(this.lastMapNode);
+		MapNode to = event_regions[reverseStatus(this.status)].findMapNodeInDis(this.lastMapNode.getLocation(),
+				c.region_id,
 				this.speed*this.duration);
 		List<MapNode> nodePath = getPathFinder().getShortestPath(lastMapNode, to);
 		
@@ -258,7 +262,6 @@ public class S_STARTMovement extends ShortestPathMapBasedMovement {
 
 		return speed;
 	}
-	
 	/**
 	 * g(x) = 0.00792899*x+0.534121
 f(x) = 1-exp( -0.0644977*x+0.826339)
