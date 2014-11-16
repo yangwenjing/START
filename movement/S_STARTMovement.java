@@ -209,14 +209,14 @@ public class S_STARTMovement extends ShortestPathMapBasedMovement {
 	private double cumulativeLastingTimeForStatus0(int timeLength)
 	{
 		if(timeLength<0) return 0;
-		return DURATION_A_FOR_STATUS0-Math.exp(-DURATION_PARA_FOR_STATUS0*timeLength);
+		return 1.0/10800.0*timeLength;
 		
 	}
 	private double cumulativeLastingTimeForStatus1(int timeLength)
 	{
 		if(timeLength<0) return 0;
-		return DURATION_A_FOR_STATUS1-Math.exp(-DURATION_PARA_FOR_STATUS1*timeLength);
-		
+		//return DURATION_A_FOR_STATUS1-Math.exp(-DURATION_PARA_FOR_STATUS1*timeLength);
+		return 1.0/10800.0*timeLength;
 	}
 	
 	/**
