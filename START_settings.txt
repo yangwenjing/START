@@ -32,7 +32,7 @@ Group.waitTime = 0, 10
 Group.nrofInterfaces = 1
 Group.interface1 = btInterface
 # Walking speeds
-Group.speed = 0.0, 44.4
+Group.speed = 0.0, 33.3
 # Message TTL of 300 minutes (5 hours)
 Group.msgTtl = 300
 

@@ -1,4 +1,4 @@
-Scenario.name =v4_rwp_dd_spw_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_%%Scenario.endTime%%
+Scenario.name =[2]RWP_dd_spw_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_%%Scenario.endTime%%
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
@@ -31,7 +31,7 @@ Group.waitTime = 0, 10
 Group.nrofInterfaces = 1
 Group.interface1 = btInterface
 # Walking speeds
-Group.speed = 1.0, 44.4
+Group.speed = 0.0, 33.3
 # Message TTL of 300 minutes (5 hours)
 Group.msgTtl = 300
 
@@ -40,7 +40,7 @@ Group.nrofHosts = 4000
 # group1 (pedestrians) specific settings
 Group1.groupID = p
 
-Group1.speed = 1.0, 44.4
+Group1.speed = 0.0, 33.3
 
 
 #################################################################################################
@@ -90,18 +90,18 @@ MovementModel.warmup = 1000
 ## Reports - all report names have to be valid report classes
 
 # how many reports to load
-Report.nrofReports = 6
+Report.nrofReports = 4
 # length of the warm up period (simulated seconds)
 Report.warmup = 3600
 # default directory of reports (can be overridden per Report with output setting)
 Report.reportDir = reports/
 # Report classes to load
-Report.report1 = MessageStatsReport
-Report.report2 = MessageDeliveryReport
-Report.report3 = ContactTimesReport
-Report.report4 = AdjacencyGraphvizReport
-Report.report5 = InterContactTimesReport
-Report.report6 = MovementReport
+#Report.report1 = MessageStatsReport
+#Report.report2 = MessageDeliveryReport
+Report.report1 = ContactTimesReport
+Report.report2 = AdjacencyGraphvizReport
+Report.report3 = InterContactTimesReport
+Report.report4 = MovementReport
 
 ## Default settings for some routers settings
 ProphetRouter.secondsInTimeUnit = 30
