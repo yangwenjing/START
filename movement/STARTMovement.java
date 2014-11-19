@@ -242,7 +242,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 			speed++;
 		}
 
-		return speed;
+		return (double)speed/3.6;
 	}
 	
 	private double generateSpeedForStatus1() {
@@ -258,7 +258,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 			speed++;
 		}
 
-		return speed;
+		return (double)speed/3.6;
 	}
 	
 	private double cumulativeSpeedDistributionForStatus0(int v)
