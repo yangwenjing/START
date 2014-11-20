@@ -20,7 +20,6 @@ import core.SimClock;
  * 3.速度将0,1统一考虑
  */
 public class S_STARTMovement extends ShortestPathMapBasedMovement {
-	
 	/** 区分车辆状态 */
 	private int status;
 	
@@ -74,11 +73,15 @@ public class S_STARTMovement extends ShortestPathMapBasedMovement {
 	/**
 	 * @param mbm
 	 */
-	public S_STARTMovement(S_STARTMovement mbm) {
+	public S_STARTMovement(STARTMovement mbm) {
 		super(mbm);
 		// TODO Auto-generated constructor stub
 	}
 	
+	private int reverseStatus(int status)
+	{
+		return status==1?0:1;
+	}
 	
 	/**
 	 * 在这里实现
@@ -92,8 +95,9 @@ public class S_STARTMovement extends ShortestPathMapBasedMovement {
 		Path p = new Path(speed);
 
 		this.setTimer();
-		
-		MapNode to = event_regions[this.status].findMapNodeInDis(this.lastMapNode.getLocation(), 
+		Cell c = event_regions[this.status].fromMN2Cell(this.lastMapNode);
+		MapNode to = event_regions[reverseStatus(this.status)].findMapNodeInDis(this.lastMapNode.getLocation(),
+				c.region_id,
 				this.speed*this.duration);
 		List<MapNode> nodePath = getPathFinder().getShortestPath(lastMapNode, to);
 		
@@ -131,88 +135,7 @@ public class S_STARTMovement extends ShortestPathMapBasedMovement {
 	private double generateLastingTime(int status)
 	{
 		double seed =  Math.random();
-		if(status==0)
-			return generateLastingTimeForStatus0(seed);
-		else
-			return generateLastingTimeForStatus1(seed);
-		
-	}
-	private double generateLastingTimeForStatus1(double seed)
-	{
-		int maxLength = 20000;
-		int tmpLen_bak_max = maxLength;
-		int tmpLen_bak_min = 0;
-		int tmpLen = maxLength/2;
-		if(seed>=cumulativeLastingTimeForStatus1(maxLength))return maxLength;
-		if(seed<=cumulativeLastingTimeForStatus1(0)) return 0;
-		
-		
-		do{
-			if(seed<cumulativeLastingTimeForStatus1(tmpLen))
-			{
-				tmpLen_bak_max = tmpLen;
-				tmpLen = (tmpLen_bak_max-tmpLen_bak_min)/2+tmpLen_bak_min;
-			}
-			else if(seed>cumulativeLastingTimeForStatus1(tmpLen))
-			{
-				tmpLen_bak_min = tmpLen;
-				tmpLen = (tmpLen_bak_max-tmpLen_bak_min)/2+tmpLen_bak_min;
-			}
-			else
-				return tmpLen;
-				
-		}
-		while(Math.abs(tmpLen_bak_max-tmpLen_bak_min)<=1);
-			
-		return tmpLen;
-		
-		
-	}
-	
-	
-	private double generateLastingTimeForStatus0(double seed)
-	{
-		int maxLength = 20000;
-		int tmpLen_bak_max = maxLength;
-		int tmpLen_bak_min = 0;
-		int tmpLen = maxLength/2;
-		if(seed>=cumulativeLastingTimeForStatus0(maxLength))return maxLength;
-		if(seed<=cumulativeLastingTimeForStatus0(0)) return 0;
-		
-		//System.out.println("calculate lasting time...");
-		do{
-			if(seed<cumulativeLastingTimeForStatus0(tmpLen))
-			{
-				tmpLen_bak_max = tmpLen;
-				tmpLen = (tmpLen_bak_max-tmpLen_bak_min)/2+tmpLen_bak_min;
-			}
-			else if(seed>cumulativeLastingTimeForStatus0(tmpLen))
-			{
-				tmpLen_bak_min = tmpLen;
-				tmpLen = (tmpLen_bak_max-tmpLen_bak_min)/2+tmpLen_bak_min;
-			}
-			else
-				return tmpLen;
-				
-		}
-		while(Math.abs(tmpLen_bak_max-tmpLen_bak_min)<=100);
-		//System.out.println("finish calculating lasting time...");
-		return tmpLen;
-		
-		
-	}
-	
-	private double cumulativeLastingTimeForStatus0(int timeLength)
-	{
-		if(timeLength<0) return 0;
-		return DURATION_A_FOR_STATUS0-Math.exp(-DURATION_PARA_FOR_STATUS0*timeLength);
-		
-	}
-	private double cumulativeLastingTimeForStatus1(int timeLength)
-	{
-		if(timeLength<0) return 0;
-		return DURATION_A_FOR_STATUS1-Math.exp(-DURATION_PARA_FOR_STATUS1*timeLength);
-		
+		return seed*10800;
 	}
 	
 	/**
@@ -258,7 +181,6 @@ public class S_STARTMovement extends ShortestPathMapBasedMovement {
 
 		return speed;
 	}
-	
 	/**
 	 * g(x) = 0.00792899*x+0.534121
 f(x) = 1-exp( -0.0644977*x+0.826339)

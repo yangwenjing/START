@@ -1,4 +1,4 @@
-Scenario.name = [2]START_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%
+Scenario.name = [2]SP_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
@@ -24,7 +24,7 @@ Scenario.nrofHostGroups = 1
 
 # Common settings for all groups
 Group.nrofHosts = 4000
-Group.movementModel = STARTMovement
+Group.movementModel = ShortestPathMapBasedMovement
 Group.router = EpidemicRouter
 Group.bufferSize = 5M
 Group.waitTime = 0, 10
@@ -86,13 +86,7 @@ MovementModel.warmup = 1000
 ######################设置地图#########################################
 MapBasedMovement.nrofMapFiles = 1
 MapBasedMovement.mapFile1 = data/beigjing2.wkt
-######################读取区域文件#########################################
 
-Group.Cell0 = data/cells/event0.txt
-Group.Cell1 = data/cells/event1.txt
-Group.TransProbFile0 = data/transProb/201103_event0_11_14_rate.txt
-Group.TransProbFile1 = data/transProb/201103_event1_11_14_rate.txt
- 
 #################################################################################################
 
 ## Reports - all report names have to be valid report classes

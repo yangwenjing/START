@@ -1,4 +1,4 @@
-Scenario.name = [2]START_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%
+Scenario.name = START_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
@@ -32,14 +32,14 @@ Group.waitTime = 0, 10
 Group.nrofInterfaces = 1
 Group.interface1 = btInterface
 # Walking speeds
-Group.speed = 0.0, 33.3
+Group.speed = 0.0, 44.4
 # Message TTL of 300 minutes (5 hours)
 Group.msgTtl = 300
 
 # group1 (pedestrians) specific settings
 Group1.groupID = p
 
-Group1.speed = 0.0, 33.3
+Group1.speed = 0.0, 44.4
 
 
 #################################################################################################
@@ -90,8 +90,8 @@ MapBasedMovement.mapFile1 = data/beigjing2.wkt
 
 Group.Cell0 = data/cells/event0.txt
 Group.Cell1 = data/cells/event1.txt
-Group.TransProbFile0 = data/transProb/201103_event0_11_14_rate.txt
-Group.TransProbFile1 = data/transProb/201103_event1_11_14_rate.txt
+Group.TransProbFile0 = data/transProb/201103_event0_18_21_rate.txt
+Group.TransProbFile1 = data/transProb/201103_event1_18_21_rate.txt
  
 #################################################################################################
 
