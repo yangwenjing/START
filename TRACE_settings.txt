@@ -1,4 +1,4 @@
-Scenario.name = [4]TRACE_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%
+Scenario.name = [5]TRACE_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_range%%btInterface.transmitRange%%
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
