@@ -11,11 +11,11 @@ Scenario.endTime = 10800
 btInterface.type = SimpleBroadcastInterface
 # Transmit speed of 2 Mbps = 250kBps
 btInterface.transmitSpeed = 250k
-btInterface.transmitRange = 200
+btInterface.transmitRange = 100
 
 highspeedInterface.type = SimpleBroadcastInterface
 highspeedInterface.transmitSpeed = 10M
-highspeedInterface.transmitRange = 200
+highspeedInterface.transmitRange = 100
 
 #################################################################################################
 # Define 6 different node groups
@@ -41,7 +41,7 @@ Group1.groupID = p
 
 Group1.speed = 0.0, 33.3
 
-ExternalMovement.file = data/trace_4000nodes_format.txt
+ExternalMovement.file = data/TraceFormat3.txt
 #################################################################################################
 ## Message creation parameters 
 # How many event generators
