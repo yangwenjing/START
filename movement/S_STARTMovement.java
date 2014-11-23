@@ -163,7 +163,7 @@ public class S_STARTMovement extends ShortestPathMapBasedMovement {
 			speed++;
 		}
 
-		return speed;
+		return speed/3.6;
 	}
 	
 	private double generateSpeedForStatus1() {
@@ -179,7 +179,7 @@ public class S_STARTMovement extends ShortestPathMapBasedMovement {
 			speed++;
 		}
 
-		return speed;
+		return speed/3.6;
 	}
 	/**
 	 * g(x) = 0.00792899*x+0.534121
