@@ -1,4 +1,4 @@
-Scenario.name = [5]TRACE_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_range%%btInterface.transmitRange%%
+Scenario.name = [ywj]TRACE_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
@@ -11,11 +11,11 @@ Scenario.endTime = 10800
 btInterface.type = SimpleBroadcastInterface
 # Transmit speed of 2 Mbps = 250kBps
 btInterface.transmitSpeed = 250k
-btInterface.transmitRange = 100
+btInterface.transmitRange = 200
 
 highspeedInterface.type = SimpleBroadcastInterface
 highspeedInterface.transmitSpeed = 10M
-highspeedInterface.transmitRange = 100
+highspeedInterface.transmitRange = 200
 
 #################################################################################################
 # Define 6 different node groups

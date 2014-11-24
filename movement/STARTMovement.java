@@ -91,6 +91,23 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	public Path getPath() {
 		this.speed = generateSpeed(this.status);
 		Path p = new Path(speed);
+		
+		if(speed==0)
+		{
+			System.out.println("速度为0的情况");
+			p.addWaypoint(this.lastMapNode.getLocation());
+			this.status=this.status==0?1:0;//改变车辆状态。
+			this.setTimer();
+			return p;
+		}
+		//设置等待时间
+		if(SimClock.getIntTime()<this.timer)
+		{
+			System.out.println("持续时间没用完的情况");
+			p.addWaypoint(this.lastMapNode.getLocation());
+			p.setSpeed(0);
+			return p;
+		}
 
 		this.setTimer();
 		Cell c = event_regions[this.status].fromMN2Cell(this.lastMapNode);
@@ -274,7 +291,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	
 	private double cumulativeSpeedDistributionForStatus0(int v)
 	{
-		if(v<0)return 0.0;
+		if(v==0)return 0.660763;
 		if(v<=40) return 0.0059774*v+0.660763;
 		if(v<=120) return 1.0-Math.exp(-0.0644895*v+0.383622);		
 		return 1.0;
@@ -282,7 +299,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	
 	private double cumulativeSpeedDistributionForStatus1(int v)
 	{
-		if(v<0) return 0;
+		if(v==0)return 0.217714;
 		if(v<=40) return 0.0127845*v+0.217714;
 		if(v<=120) return 1.0-Math.exp(-0.0642494*v+1.45314);
 		return 1.0;

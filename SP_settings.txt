@@ -1,4 +1,4 @@
-Scenario.name = [2]SP_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%
+Scenario.name = [3]SP_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_speed_33.3
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
