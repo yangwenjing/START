@@ -139,7 +139,7 @@ public class EventAwareRegions {
 
 
 
-	private Cell fromMN2Cell(MapNode mn) {
+	public Cell fromMN2Cell(MapNode mn) {
 		Coord c = mn.getLocation();
 		int x = (int) (c.getX()/grid_x_length);
 		int y = (int) (c.getY()/grid_y_length);
@@ -157,7 +157,8 @@ public class EventAwareRegions {
 		return Math.sqrt(sum);
 	}
 	
-	public MapNode findMapNodeInDis(Coord coord, double distance)
+	
+	public MapNode findMapNodeInDis(Coord coord, int region_from, double distance)
 	{
 		String ckey = getKey((int)(coord.getX()/grid_x_length),(int)(coord.getY()/grid_y_length));
 		Cell c = this.xy2Cell.get(ckey);
@@ -182,7 +183,7 @@ public class EventAwareRegions {
 				if(getDistance(c,cell2)>distance)
 					continue;
 				cells_temp.add(cell2);
-				String ft_key = getKey(c.region_id, cell2.region_id);
+				String ft_key = getKey(region_from, cell2.region_id);
 				FromToProb ftb = this.transition_prob.get(ft_key);
 				if(ftblist_temp.contains(ftb))
 					continue;

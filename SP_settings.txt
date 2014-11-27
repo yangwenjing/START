@@ -95,6 +95,7 @@ MapBasedMovement.mapFile1 = data/beigjing2.wkt
 Report.nrofReports = 8
 # length of the warm up period (simulated seconds)
 Report.warmup = 0
+
 # default directory of reports (can be overridden per Report with output setting)
 Report.reportDir = reports/
 # Report classes to load

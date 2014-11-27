@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Scenario.name =[Speed=%%Group1.speed%%][Time=%%Scenario.endTime%%]%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_%%Scenario.endTime%%
+=======
+Scenario.name =[2]RWP_dd_spw_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_%%Scenario.endTime%%
+>>>>>>> 6d7f594493c5daba4131d3340f93d68314ff3fbb
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
@@ -31,14 +35,26 @@ Group.waitTime = 0, 10
 Group.nrofInterfaces = 1
 Group.interface1 = btInterface
 # Walking speeds
+<<<<<<< HEAD
 Group.speed = 0,44.4
+=======
+Group.speed = 0.0, 33.3
+>>>>>>> 6d7f594493c5daba4131d3340f93d68314ff3fbb
 # Message TTL of 300 minutes (5 hours)
 Group.msgTtl = 300
 
 Group.nrofHosts = 4000
 Group1.groupID = w
 
+<<<<<<< HEAD
 Group1.speed = 0.0,44.4
+=======
+# group1 (pedestrians) specific settings
+Group1.groupID = p
+
+Group1.speed = 0.0, 33.3
+
+>>>>>>> 6d7f594493c5daba4131d3340f93d68314ff3fbb
 
 #################################################################################################
 ## Message creation parameters 
@@ -87,12 +103,17 @@ MovementModel.warmup = 0
 ## Reports - all report names have to be valid report classes
 
 # how many reports to load
+<<<<<<< HEAD
 Report.nrofReports = 8
+=======
+Report.nrofReports = 4
+>>>>>>> 6d7f594493c5daba4131d3340f93d68314ff3fbb
 # length of the warm up period (simulated seconds)
 Report.warmup = 0
 # default directory of reports (can be overridden per Report with output setting)
 Report.reportDir = reports/
 # Report classes to load
+<<<<<<< HEAD
 Report.report1 = ContactTimesReport
 #Report.report1 = MessageStatsReport
 Report.report2 = InterContactTimesReport
@@ -103,6 +124,14 @@ Report.report5 = TotalContactTimeReport
 Report.report6 = TotalEncountersReport
 Report.report7 = UniqueEncountersReport
 Report.report8 = EncountersVSUniqueEncountersReport
+=======
+#Report.report1 = MessageStatsReport
+#Report.report2 = MessageDeliveryReport
+Report.report1 = ContactTimesReport
+Report.report2 = AdjacencyGraphvizReport
+Report.report3 = InterContactTimesReport
+Report.report4 = MovementReport
+>>>>>>> 6d7f594493c5daba4131d3340f93d68314ff3fbb
 
 ## Default settings for some routers settings
 ProphetRouter.secondsInTimeUnit = 30

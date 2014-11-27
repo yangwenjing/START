@@ -1,9 +1,9 @@
-Scenario.name = [ywj]START_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_range%%btInterface.transmitRange%%
+Scenario.name = [ywj]TRACE_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
 Scenario.endTime = 10800
-#Scenario.endTime = 200
+#Scenario.endTime = 100
 
 #################################################################################################
 
@@ -24,7 +24,7 @@ Scenario.nrofHostGroups = 1
 
 # Common settings for all groups
 Group.nrofHosts = 4000
-Group.movementModel = STARTMovement
+Group.movementModel = ExternalMovement
 Group.router = EpidemicRouter
 Group.bufferSize = 5M
 Group.waitTime = 0, 10
@@ -32,16 +32,16 @@ Group.waitTime = 0, 10
 Group.nrofInterfaces = 1
 Group.interface1 = btInterface
 # Walking speeds
-#Group.speed = 0.0, 33.3
+Group.speed = 0.0, 33.3
 # Message TTL of 300 minutes (5 hours)
 Group.msgTtl = 300
 
 # group1 (pedestrians) specific settings
 Group1.groupID = p
 
-#Group1.speed = 0.0, 33.3
+Group1.speed = 0.0, 33.3
 
-
+ExternalMovement.file = data/TraceFormat3.txt
 #################################################################################################
 ## Message creation parameters 
 # How many event generators
@@ -82,18 +82,6 @@ MovementModel.rngSeed = 1
 MovementModel.worldSize = 24445,23584
 # How long time to move hosts in the world before real simulation
 MovementModel.warmup = 1000
-
-######################设置地图#########################################
-MapBasedMovement.nrofMapFiles = 1
-MapBasedMovement.mapFile1 = data/beigjing2.wkt
-######################读取区域文件#########################################
-
-Group.Cell0 = data/cells/event0.txt
-Group.Cell1 = data/cells/event1.txt
-Group.TransProbFile0 = data/transProb/201103_event0_11_14_rate.txt
-Group.TransProbFile1 = data/transProb/201103_event1_11_14_rate.txt
- 
-#################################################################################################
 
 ## Reports - all report names have to be valid report classes
 
