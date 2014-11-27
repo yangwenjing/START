@@ -1,3 +1,4 @@
 *.class
 reports/
 *.bak
+data/TraceFormat.txt
