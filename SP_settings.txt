@@ -1,4 +1,4 @@
-Scenario.name =[Speed=%%Group1.speed%%][Time=%%Scenario.endTime%%]%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_%%Scenario.endTime%%
+Scenario.name = [Speed=%%Group1.speed%%]%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
@@ -23,7 +23,8 @@ Scenario.nrofHostGroups = 1
 
 
 # Common settings for all groups
-Group.movementModel = RandomWaypoint
+Group.nrofHosts = 4000
+Group.movementModel = ShortestPathMapBasedMovement
 Group.router = EpidemicRouter
 Group.bufferSize = 5M
 Group.waitTime = 0, 10
@@ -31,28 +32,29 @@ Group.waitTime = 0, 10
 Group.nrofInterfaces = 1
 Group.interface1 = btInterface
 # Walking speeds
-Group.speed = 0,44.4
+Group.speed = 0.0, 33.3
 # Message TTL of 300 minutes (5 hours)
 Group.msgTtl = 300
 
-Group.nrofHosts = 4000
-Group1.groupID = w
+# group1 (pedestrians) specific settings
+Group1.groupID = sp
 
-Group1.speed = 0.0,44.4
+Group1.speed = 0.0, 33.3
+
 
 #################################################################################################
 ## Message creation parameters 
 # How many event generators
-Events.nrof = 2
+Events.nrof = 4000
 # Class of the first event generator
 Events1.class = MessageEventGenerator
 # (following settings are specific for the MessageEventGenerator class)
 # Creation interval in seconds (one new message every 25 to 35 seconds)
 Events1.interval = 1,10
 # Message sizes (500kB - 1MB)
-Events1.size = 500k,1M
+Events1.size = 50k,100k
 # range of message source/destination addresses
-Events1.hosts = 0,1000
+Events1.hosts = 0,10
 #Events1.tohosts = 2,3
 # Message ID prefix
 Events1.prefix = M
@@ -65,7 +67,7 @@ Events2.interval = 1,10
 # Message sizes (500kB - 1MB)
 Events2.size = 500k,1M
 # range of message source/destination addresses
-Events2.hosts = 0,1000
+Events2.hosts = 0,9
 #Events1.tohosts = 2,3
 # Message ID prefix
 Events2.prefix = M
@@ -81,6 +83,9 @@ MovementModel.worldSize = 24445,23584
 # How long time to move hosts in the world before real simulation
 MovementModel.warmup = 0
 
+######################…Ë÷√µÿÕº#########################################
+MapBasedMovement.nrofMapFiles = 1
+MapBasedMovement.mapFile1 = data/beigjing2.wkt
 
 #################################################################################################
 
@@ -104,9 +109,10 @@ Report.report6 = TotalEncountersReport
 Report.report7 = UniqueEncountersReport
 Report.report8 = EncountersVSUniqueEncountersReport
 
+
 ## Default settings for some routers settings
 ProphetRouter.secondsInTimeUnit = 30
-SprayAndWaitRouter.nrofCopies = 100
+SprayAndWaitRouter.nrofCopies = 0
 SprayAndWaitRouter.binaryMode = true
 
 ## Optimization settings -- these affect the speed of the simulation
