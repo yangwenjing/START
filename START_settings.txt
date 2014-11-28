@@ -1,8 +1,8 @@
-Scenario.name = [ywj]START_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_range%%btInterface.transmitRange%%
+Scenario.name = [Speed=40_30]%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_range%%btInterface.transmitRange%%
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
-Scenario.endTime = 10800
+Scenario.endTime = 3600
 #Scenario.endTime = 200
 
 #################################################################################################
@@ -81,7 +81,7 @@ MovementModel.rngSeed = 1
 # World's size for Movement Models without implicit size (width, height; meters)
 MovementModel.worldSize = 24445,23584
 # How long time to move hosts in the world before real simulation
-MovementModel.warmup = 1000
+MovementModel.warmup = 0
 
 ######################…Ë÷√µÿÕº#########################################
 MapBasedMovement.nrofMapFiles = 1
@@ -97,10 +97,10 @@ Group.TransProbFile1 = data/transProb/201103_event1_11_14_rate.txt
 
 ## Reports - all report names have to be valid report classes
 
-# how many reports to load
-Report.nrofReports = 4
+Report.nrofReports = 8
 # length of the warm up period (simulated seconds)
-Report.warmup = 3600
+Report.warmup = 0
+
 # default directory of reports (can be overridden per Report with output setting)
 Report.reportDir = reports/
 # Report classes to load
@@ -109,6 +109,12 @@ Report.report1 = ContactTimesReport
 Report.report2 = InterContactTimesReport
 Report.report3 = MovementReport
 Report.report4 = AdjacencyGraphvizReport
+Report.report5 = TotalContactTimeReport
+#Report.report1 = MessageStatsReport
+Report.report6 = TotalEncountersReport
+Report.report7 = UniqueEncountersReport
+Report.report8 = EncountersVSUniqueEncountersReport
+
 
 
 ## Default settings for some routers settings

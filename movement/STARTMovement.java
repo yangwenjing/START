@@ -259,34 +259,38 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	}
 
 	private double generateSpeedForStatus0() {
-		double  prob = Math.random();
-		while(prob>cumulativeSpeedDistributionForStatus0(120))
-		{
-			prob = Math.random();
-		}
-		int speed = 0; 
-		while(prob>cumulativeSpeedDistributionForStatus0(speed))
-		{
-			speed++;
-		}
+//		double  prob = Math.random();
+//		while(prob>cumulativeSpeedDistributionForStatus0(120))
+//		{
+//			prob = Math.random();
+//		}
+//		int speed = 0; 
+//		while(prob>cumulativeSpeedDistributionForStatus0(speed))
+//		{
+//			speed++;
+//		}
+		
+		double speed = Math.random()*30;
 
-		return (double)speed/3.6;
+		return speed/3.6;
 	}
 	
 	private double generateSpeedForStatus1() {
 
-		double  prob = Math.random();
-		while(prob>cumulativeSpeedDistributionForStatus1(120))
-		{
-			prob = Math.random();
-		}
-		int speed = 0; 
-		while(prob>cumulativeSpeedDistributionForStatus1(speed))
-		{
-			speed++;
-		}
+//		double  prob = Math.random();
+//		while(prob>cumulativeSpeedDistributionForStatus1(120))
+//		{
+//			prob = Math.random();
+//		}
+//		int speed = 0; 
+//		while(prob>cumulativeSpeedDistributionForStatus1(speed))
+//		{
+//			speed++;
+//		}
+		
+		double speed = Math.random()*40;
 
-		return (double)speed/3.6;
+		return speed/3.6;
 	}
 	
 	private double cumulativeSpeedDistributionForStatus0(int v)
