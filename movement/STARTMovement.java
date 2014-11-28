@@ -120,16 +120,31 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		assert nodePath.size() > 0 : "No path from " + lastMapNode + " to " +
 			to + ". The simulation map isn't fully connected";
 				
+		double dis=0;
+		MapNode source = this.lastMapNode;
 		for (MapNode node : nodePath) { // create a Path from the shortest path
+			dis+=distance(source.getLocation(),node.getLocation());
 			p.addWaypoint(node.getLocation());
 		}
-		
+		if(this.duration!=0)
+		{
+			speed = dis/this.duration;
+			p.setSpeed(speed);
+			
+		}
 		lastMapNode = to;
 		this.status=this.status==0?1:0;//改变车辆状态。
 		return p;
 	}	
 	
 	
+	private double distance(Coord location, Coord location2) {
+		// TODO Auto-generated method stub
+		double x = Math.pow(location.getX()-location2.getY(), 2);
+		double y = Math.pow(location.getY()-location2.getY(), 2);
+		return Math.sqrt(x+y);
+	}
+
 	/**
 	 * 初始化节点位置
 	 * 在DTNHost中被调用
