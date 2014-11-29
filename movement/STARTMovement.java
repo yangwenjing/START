@@ -6,6 +6,7 @@ package movement;
 import java.util.List;
 import java.util.Random;
 
+import movement.map.DijkstraPathFinder;
 import movement.map.MapNode;
 import movement.map.SimMap;
 import core.Coord;
@@ -16,7 +17,8 @@ import core.SimClock;
  * @author Yang Wenjing
  *
  */
-public class STARTMovement extends ShortestPathMapBasedMovement {
+public class STARTMovement extends MapBasedMovement implements 
+SwitchableMovement {
 	
 	/** 区分车辆状态 */
 	private int status;
@@ -44,6 +46,12 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	public static final String CELLS_0 = "Cell0";
 	public static final String CELLS_1 = "Cell1";
 
+	private DijkstraPathFinder pathFinder;
+	
+	public DijkstraPathFinder getPathFinder()
+	{
+		return this.pathFinder;
+	}
 	/**
 	 * @param settings
 	 */
@@ -51,7 +59,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		super(settings);
 		// TODO Auto-generated constructor stub
 		this.status = rng.nextInt(2);
-		
+		this.pathFinder = new DijkstraPathFinder(getOkMapNodeTypes());
 		EventAwareRegions.map = getMap();
 		initEventRegions(settings);
 	}
@@ -91,7 +99,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	public Path getPath() {
 		this.speed = generateSpeed(this.status);
 		Path p = new Path(speed);
-		
+		System.out.println("get path ....");
 		if(speed==0)
 		{
 			System.out.println("速度为0的情况");
