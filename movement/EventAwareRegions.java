@@ -175,22 +175,58 @@ public class EventAwareRegions {
 		
 		int x=x_min;
 		int y=y_min;
+		
 		while(x<=x_max)
 		{
-			while(y<=y_max)
-			{
-				Cell cell2 = this.xy2Cell.get(getKey(x,y));
-				if(getDistance(c,cell2)>distance)
-					continue;
-				cells_temp.add(cell2);
-				String ft_key = getKey(region_from, cell2.region_id);
-				FromToProb ftb = this.transition_prob.get(ft_key);
-				if(ftblist_temp.contains(ftb))
-					continue;
-				ftblist_temp.add(ftb);
-				y++;
-			}
+			Cell cell2 = this.xy2Cell.get(getKey(x,y_min));
+			
+			if(cells_temp.contains(cell2))continue;
+			
+			cells_temp.add(cell2);
+			String ft_key = getKey(region_from, cell2.region_id);
+			FromToProb ftb = this.transition_prob.get(ft_key);
+			if(ftblist_temp.contains(ftb))
+				continue;
+			ftblist_temp.add(ftb);
+			
+			cell2 = this.xy2Cell.get(getKey(x,y_max));
+			
+			if(cells_temp.contains(cell2))continue;
+			
+			cells_temp.add(cell2);
+			ft_key = getKey(region_from, cell2.region_id);
+			ftb = this.transition_prob.get(ft_key);
+			if(ftblist_temp.contains(ftb))
+				continue;
+			ftblist_temp.add(ftb);
 			x++;
+		}
+		
+		y++;
+		while(y<y_max)
+		{
+			Cell cell2 = this.xy2Cell.get(getKey(x_min,y));
+			
+			if(cells_temp.contains(cell2))continue;
+			
+			cells_temp.add(cell2);
+			String ft_key = getKey(region_from, cell2.region_id);
+			FromToProb ftb = this.transition_prob.get(ft_key);
+			if(ftblist_temp.contains(ftb))
+				continue;
+			ftblist_temp.add(ftb);
+			
+			cell2 = this.xy2Cell.get(getKey(x_max,y));
+			
+			if(cells_temp.contains(cell2))continue;
+			
+			cells_temp.add(cell2);
+			ft_key = getKey(region_from, cell2.region_id);
+			ftb = this.transition_prob.get(ft_key);
+			if(ftblist_temp.contains(ftb))
+				continue;
+			ftblist_temp.add(ftb);
+			y++;
 		}
 		
 		Collections.sort(ftblist_temp);
@@ -209,7 +245,7 @@ public class EventAwareRegions {
 	private FromToProb randSelectARegion(List<FromToProb> ftblist_temp) {
 		double cumulativeprob = 0;
 		double result = rng.nextDouble();
-		FromToProb ftb_selected=null;
+		FromToProb ftb_selected=ftblist_temp.get(0);
 		for(FromToProb ftb:ftblist_temp)
 		{
 			cumulativeprob+=ftb.probability;

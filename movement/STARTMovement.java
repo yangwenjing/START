@@ -167,7 +167,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		double seed = Math.random();
 		if(status==0)
 		{
-			while(seed>cumulativeLastingTimeForStatus0(3600))
+			while(seed>cumulativeLastingTimeForStatus0(10800))
 			{	
 				seed = Math.random();
 			}
@@ -175,7 +175,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		}
 		else
 		{
-			while(seed>cumulativeLastingTimeForStatus1(3600))
+			while(seed>cumulativeLastingTimeForStatus1(10800))
 			{	
 				seed = Math.random();
 			}
@@ -184,7 +184,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	}
 	private double generateLastingTimeForStatus1(double seed)
 	{
-		int maxLength = 3600;
+		int maxLength = 10800;
 		int tmpLen_bak_max = maxLength;
 		int tmpLen_bak_min = 0;
 		int tmpLen = maxLength/2;
@@ -285,7 +285,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 //			speed++;
 //		}
 		
-		double speed = Math.random()*30;
+		double speed = Math.random()*80;
 
 		return speed/3.6;
 	}
@@ -303,7 +303,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 //			speed++;
 //		}
 		
-		double speed = Math.random()*40;
+		double speed = Math.random()*80;
 
 		return speed/3.6;
 	}
