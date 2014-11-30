@@ -101,11 +101,11 @@ SwitchableMovement {
 	public Path getPath() {
 		this.speed = generateSpeed(this.status);
 		Path p = new Path(speed);
-		System.out.println("START get path ....");
+		//System.out.println("START get path ....");
 		
 		if(speed==0)
 		{
-			System.out.println("速度为0的情况");
+			//System.out.println("速度为0的情况");
 			p.addWaypoint(this.lastMapNode.getLocation());
 			this.status=this.status==0?1:0;//改变车辆状态。
 			this.setTimer();

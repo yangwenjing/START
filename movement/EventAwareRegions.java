@@ -168,7 +168,7 @@ public class EventAwareRegions {
 	
 	public MapNode findMapNodeInDis(Coord coord, int region_from, double distance)
 	{
-		System.out.println("**找到范围内的mapnode**");
+		//System.out.println("**找到范围内的mapnode**");
 		String ckey = getKey((int)(coord.getX()/grid_x_length),(int)(coord.getY()/grid_y_length));
 		Cell c = this.xy2Cell.get(ckey);
 		int x_tix = (int)(distance/grid_x_length);
@@ -215,7 +215,7 @@ public class EventAwareRegions {
 		
 		//Collections.sort(ftblist_temp);
 		FromToProb ftb_selected=null; 
-		System.out.println("Ftblist size:"+ftblist_temp.size());
+		//System.out.println("Ftblist size:"+ftblist_temp.size());
 		while(ftb_selected==null)
 		{
 			ftb_selected=randSelectARegion(ftblist_temp);
