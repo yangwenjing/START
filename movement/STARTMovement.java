@@ -82,6 +82,8 @@ SwitchableMovement {
 	public STARTMovement(STARTMovement mbm) {
 		super(mbm);
 		// TODO Auto-generated constructor stub
+		this.status = rng.nextInt(2);
+		this.pathFinder = mbm.pathFinder;
 	}
 	
 	private int reverseStatus(int status)
@@ -99,7 +101,8 @@ SwitchableMovement {
 	public Path getPath() {
 		this.speed = generateSpeed(this.status);
 		Path p = new Path(speed);
-		System.out.println("get path ....");
+		System.out.println("START get path ....");
+		
 		if(speed==0)
 		{
 			System.out.println("速度为0的情况");
@@ -108,14 +111,14 @@ SwitchableMovement {
 			this.setTimer();
 			return p;
 		}
-		//设置等待时间
-		if(SimClock.getIntTime()<this.timer)
-		{
-			System.out.println("持续时间没用完的情况");
-			p.addWaypoint(this.lastMapNode.getLocation());
-			p.setSpeed(0);
-			return p;
-		}
+//		//设置等待时间
+//		if(SimClock.getIntTime()<this.timer)
+//		{
+//			System.out.println("持续时间没用完的情况");
+//			p.addWaypoint(this.lastMapNode.getLocation());
+//			p.setSpeed(0);
+//			return p;
+//		}
 
 		this.setTimer();
 		Cell c = event_regions[this.status].fromMN2Cell(this.lastMapNode);
@@ -131,10 +134,10 @@ SwitchableMovement {
 		double dis=0;
 		MapNode source = this.lastMapNode;
 		for (MapNode node : nodePath) { // create a Path from the shortest path
-			dis+=distance(source.getLocation(),node.getLocation());
+			dis+=distance(source.getLocation(),node.getLocation());//计算实际距离
 			p.addWaypoint(node.getLocation());
 		}
-		if(this.duration!=0)
+		if(this.duration!=0)//计算实际速度
 		{
 			speed = dis/this.duration;
 			p.setSpeed(speed);
@@ -159,6 +162,7 @@ SwitchableMovement {
 	 */
 	@Override
 	public Coord getInitialLocation() {
+		System.out.println("**获取初始位置**");
 
 		MapNode node = this.event_regions[this.status].getInitMapNode();
 		this.lastMapNode = node;
@@ -282,38 +286,38 @@ SwitchableMovement {
 	}
 
 	private double generateSpeedForStatus0() {
-//		double  prob = Math.random();
-//		while(prob>cumulativeSpeedDistributionForStatus0(120))
-//		{
-//			prob = Math.random();
-//		}
-//		int speed = 0; 
-//		while(prob>cumulativeSpeedDistributionForStatus0(speed))
-//		{
-//			speed++;
-//		}
+		double  prob = Math.random();
+		while(prob>cumulativeSpeedDistributionForStatus0(120))
+		{
+			prob = Math.random();
+		}
+		int speed = 0; 
+		while(prob>cumulativeSpeedDistributionForStatus0(speed))
+		{
+			speed++;
+		}
 		
-		double speed = Math.random()*80;
+		//double speed = Math.random()*80;
 
-		return speed/3.6;
+		return (double)speed/3.6;
 	}
 	
 	private double generateSpeedForStatus1() {
 
-//		double  prob = Math.random();
-//		while(prob>cumulativeSpeedDistributionForStatus1(120))
-//		{
-//			prob = Math.random();
-//		}
-//		int speed = 0; 
-//		while(prob>cumulativeSpeedDistributionForStatus1(speed))
-//		{
-//			speed++;
-//		}
+		double  prob = Math.random();
+		while(prob>cumulativeSpeedDistributionForStatus1(120))
+		{
+			prob = Math.random();
+		}
+		int speed = 0; 
+		while(prob>cumulativeSpeedDistributionForStatus1(speed))
+		{
+			speed++;
+		}
 		
-		double speed = Math.random()*80;
+		//double speed = Math.random()*80;
 
-		return speed/3.6;
+		return (double)speed/3.6;
 	}
 	
 	private double cumulativeSpeedDistributionForStatus0(int v)
@@ -331,4 +335,10 @@ SwitchableMovement {
 		if(v<=120) return 1.0-Math.exp(-0.0642494*v+1.45314);
 		return 1.0;
 	}
+	
+	@Override
+	public STARTMovement replicate() {
+		return new STARTMovement(this);
+	}
+
 }

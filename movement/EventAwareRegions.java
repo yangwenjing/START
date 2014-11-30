@@ -61,21 +61,20 @@ public class EventAwareRegions {
 	
 	public MapNode getInitMapNode()
 	{
-		
-		double result = Math.random();
-		double prob = 0;
-		for(Cell c:this.cells)
+		MapNode mn = null;
+		while(mn==null)
 		{
-			prob += (double)c.num/(double)this.sum_events; 
-			if(result<prob)
-			{
-				List<Cell> initcells = new ArrayList<Cell>(1);
-				initcells.add(c);
-				return getDestinationMapNode(c.region_id,initcells);
-			}
+			int result = rng.nextInt(200);
+			Cell c = this.cells.get(result);
+			List<Cell> initcells = new ArrayList<Cell>();
+			initcells.add(c);
+			mn =  getDestinationMapNode(c.region_id,initcells);
 		}
-		List<MapNode> nodes = map.getNodes();
-		return nodes.get(rng.nextInt(nodes.size()));
+		
+		return mn;
+		
+		//List<MapNode> nodes = map.getNodes();
+		//return nodes.get(rng.nextInt(nodes.size()));
 	}
 	
 	
@@ -88,6 +87,7 @@ public class EventAwareRegions {
 		this.Area_matrix_inputFileName = cellsFile;
 		this.Transition_probability_inputFileName = transFile;
 		loadCells();
+		loadTransitionProb();
 		loadRegion2MapNode();
 		
 		
@@ -103,6 +103,10 @@ public class EventAwareRegions {
 			if(cells_in.contains(cell))
 				valid_mapNodes.add(mn);
 		}
+		if(valid_mapNodes.size()<=0)
+		{
+			return mapNodes;
+		}
 		return valid_mapNodes;
 	}
 	
@@ -111,13 +115,17 @@ public class EventAwareRegions {
 	{
 
 		List<MapNode> mapNodes = this.region2MapNode.get(region_to);
-		List<MapNode> valid_mapNodes = mapNodes_in(mapNodes,cells_in);
-		
-		int index = rng.nextInt(valid_mapNodes.size()-1);
+		List<MapNode> valid_mapNodes = null;
+		if(mapNodes==null)
+		{
+			valid_mapNodes = this.map.getNodes();
+		}
+		else{
+			valid_mapNodes = mapNodes_in(mapNodes,cells_in);
+		}
+		int index = rng.nextInt(valid_mapNodes.size());
 		return valid_mapNodes.get(index);
 	}
-	
-	
 	
 	private void loadRegion2MapNode() {
 		this.region2MapNode = new Hashtable<Integer, List<MapNode>>();
@@ -160,6 +168,7 @@ public class EventAwareRegions {
 	
 	public MapNode findMapNodeInDis(Coord coord, int region_from, double distance)
 	{
+		System.out.println("**ÕÒµ½·¶Î§ÄÚµÄmapnode**");
 		String ckey = getKey((int)(coord.getX()/grid_x_length),(int)(coord.getY()/grid_y_length));
 		Cell c = this.xy2Cell.get(ckey);
 		int x_tix = (int)(distance/grid_x_length);
@@ -178,59 +187,35 @@ public class EventAwareRegions {
 		
 		while(x<=x_max)
 		{
-			Cell cell2 = this.xy2Cell.get(getKey(x,y_min));
+			while(y<=y_max)
+			{
+				Cell cell2 = this.xy2Cell.get(getKey(x,y));
 			
-			if(cells_temp.contains(cell2))continue;
+				if(!cells_temp.contains(cell2))
+				{
+					cells_temp.add(cell2);
+				}
 			
-			cells_temp.add(cell2);
-			String ft_key = getKey(region_from, cell2.region_id);
-			FromToProb ftb = this.transition_prob.get(ft_key);
-			if(ftblist_temp.contains(ftb))
-				continue;
-			ftblist_temp.add(ftb);
 			
-			cell2 = this.xy2Cell.get(getKey(x,y_max));
-			
-			if(cells_temp.contains(cell2))continue;
-			
-			cells_temp.add(cell2);
-			ft_key = getKey(region_from, cell2.region_id);
-			ftb = this.transition_prob.get(ft_key);
-			if(ftblist_temp.contains(ftb))
-				continue;
-			ftblist_temp.add(ftb);
+				String ft_key = getKey(region_from, cell2.region_id);
+				newFromToProb(region_from,cell2.region_id);
+				FromToProb ftb = this.transition_prob.get(ft_key);
+				if(!ftblist_temp.contains(ftb))
+				{
+					ftblist_temp.add(ftb);
+				}
+				
+				y++;
+			}
+		
 			x++;
 		}
 		
-		y++;
-		while(y<y_max)
-		{
-			Cell cell2 = this.xy2Cell.get(getKey(x_min,y));
-			
-			if(cells_temp.contains(cell2))continue;
-			
-			cells_temp.add(cell2);
-			String ft_key = getKey(region_from, cell2.region_id);
-			FromToProb ftb = this.transition_prob.get(ft_key);
-			if(ftblist_temp.contains(ftb))
-				continue;
-			ftblist_temp.add(ftb);
-			
-			cell2 = this.xy2Cell.get(getKey(x_max,y));
-			
-			if(cells_temp.contains(cell2))continue;
-			
-			cells_temp.add(cell2);
-			ft_key = getKey(region_from, cell2.region_id);
-			ftb = this.transition_prob.get(ft_key);
-			if(ftblist_temp.contains(ftb))
-				continue;
-			ftblist_temp.add(ftb);
-			y++;
-		}
 		
-		Collections.sort(ftblist_temp);
+		
+		//Collections.sort(ftblist_temp);
 		FromToProb ftb_selected=null; 
+		System.out.println("Ftblist size:"+ftblist_temp.size());
 		while(ftb_selected==null)
 		{
 			ftb_selected=randSelectARegion(ftblist_temp);
@@ -240,16 +225,36 @@ public class EventAwareRegions {
 		return getDestinationMapNode(ftb_selected.to, cells_temp);
 	}
 
+	private void newFromToProb(int from, int to) {
+		String ft_key = getKey(from,to);
+		if(!this.transition_prob.containsKey(ft_key))
+		{
+			FromToProb ftb_add = new FromToProb(from,to,0);
+			this.transition_prob.put(ft_key, ftb_add);
+		}
+	}
+	
+	private double getSumFtbProb(List<FromToProb> ftblist_temp)
+	{
+		double ccdf=0;
+		for(FromToProb f:ftblist_temp)
+		{
+			ccdf+=f.probability;
+		}
+		return ccdf;
+	}
+
 
 
 	private FromToProb randSelectARegion(List<FromToProb> ftblist_temp) {
 		double cumulativeprob = 0;
-		double result = rng.nextDouble();
+		double ccdf = getSumFtbProb(ftblist_temp);
+		double result = rng.nextDouble()*ccdf;
 		FromToProb ftb_selected=ftblist_temp.get(0);
 		for(FromToProb ftb:ftblist_temp)
 		{
 			cumulativeprob+=ftb.probability;
-			if(cumulativeprob>result)
+			if(cumulativeprob>=result)
 			{
 				ftb_selected = ftb;
 				break;

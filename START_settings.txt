@@ -2,7 +2,7 @@ Scenario.name = [Speed=80_80][55.5]%%Group.movementModel%%_%%Group.router%%_node
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
-Scenario.endTime = 3600
+Scenario.endTime = 10800
 #Scenario.endTime = 200
 
 #################################################################################################

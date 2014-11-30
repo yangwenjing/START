@@ -22,7 +22,12 @@ public class FromToProb implements Comparable<FromToProb> {
 
 	@Override
 	public int compareTo(FromToProb o) {
-		return this.probability>=o.probability?1:-1;
+		if(this.probability>o.probability)
+			return 1;
+		else if(this.probability<o.probability)
+			return -1;
+		else
+			return 0;
 	}
 	
 }
