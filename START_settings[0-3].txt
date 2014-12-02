@@ -1,9 +1,9 @@
-Scenario.name = [Speed=40_30]%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_range%%btInterface.transmitRange%%
+Scenario.name = START_scenario_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
-Scenario.endTime = 3600
-#Scenario.endTime = 200
+Scenario.endTime = 10800
+#Scenario.endTime = 100
 
 #################################################################################################
 
@@ -32,14 +32,14 @@ Group.waitTime = 0, 10
 Group.nrofInterfaces = 1
 Group.interface1 = btInterface
 # Walking speeds
-#Group.speed = 0.0, 33.3
+Group.speed = 0.0, 44.4
 # Message TTL of 300 minutes (5 hours)
 Group.msgTtl = 300
 
 # group1 (pedestrians) specific settings
 Group1.groupID = p
 
-#Group1.speed = 0.0, 33.3
+Group1.speed = 0.0, 44.4
 
 
 #################################################################################################
@@ -81,7 +81,7 @@ MovementModel.rngSeed = 1
 # World's size for Movement Models without implicit size (width, height; meters)
 MovementModel.worldSize = 24445,23584
 # How long time to move hosts in the world before real simulation
-MovementModel.warmup = 0
+MovementModel.warmup = 1000
 
 ######################…Ë÷√µÿÕº#########################################
 MapBasedMovement.nrofMapFiles = 1
@@ -90,17 +90,17 @@ MapBasedMovement.mapFile1 = data/beigjing2.wkt
 
 Group.Cell0 = data/cells/event0.txt
 Group.Cell1 = data/cells/event1.txt
-Group.TransProbFile0 = data/transProb/201103_event0_11_14_rate.txt
-Group.TransProbFile1 = data/transProb/201103_event1_11_14_rate.txt
+Group.TransProbFile0 = data/transProb/201103_event0_00_03_rate.txt
+Group.TransProbFile1 = data/transProb/201103_event1_00_03_rate.txt
  
 #################################################################################################
 
 ## Reports - all report names have to be valid report classes
 
-Report.nrofReports = 8
+# how many reports to load
+Report.nrofReports = 4
 # length of the warm up period (simulated seconds)
-Report.warmup = 0
-
+Report.warmup = 3600
 # default directory of reports (can be overridden per Report with output setting)
 Report.reportDir = reports/
 # Report classes to load
@@ -109,12 +109,6 @@ Report.report1 = ContactTimesReport
 Report.report2 = InterContactTimesReport
 Report.report3 = MovementReport
 Report.report4 = AdjacencyGraphvizReport
-Report.report5 = TotalContactTimeReport
-#Report.report1 = MessageStatsReport
-Report.report6 = TotalEncountersReport
-Report.report7 = UniqueEncountersReport
-Report.report8 = EncountersVSUniqueEncountersReport
-
 
 
 ## Default settings for some routers settings

@@ -76,6 +76,10 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 		// TODO Auto-generated constructor stub
 	}
 	
+	private int reverseStatus(int status)
+	{
+		return status==1?0:1;
+	}
 	
 	/**
 	 * 在这里实现
@@ -87,10 +91,28 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	public Path getPath() {
 		this.speed = generateSpeed(this.status);
 		Path p = new Path(speed);
+		
+		if(speed==0)
+		{
+			System.out.println("速度为0的情况");
+			p.addWaypoint(this.lastMapNode.getLocation());
+			this.status=this.status==0?1:0;//改变车辆状态。
+			this.setTimer();
+			return p;
+		}
+		//设置等待时间
+		if(SimClock.getIntTime()<this.timer)
+		{
+			System.out.println("持续时间没用完的情况");
+			p.addWaypoint(this.lastMapNode.getLocation());
+			p.setSpeed(0);
+			return p;
+		}
 
 		this.setTimer();
-		
-		MapNode to = event_regions[this.status].findMapNodeInDis(this.lastMapNode.getLocation(), 
+		Cell c = event_regions[this.status].fromMN2Cell(this.lastMapNode);
+		MapNode to = event_regions[reverseStatus(this.status)].findMapNodeInDis(this.lastMapNode.getLocation(),
+				c.region_id,
 				this.speed*this.duration);
 		List<MapNode> nodePath = getPathFinder().getShortestPath(lastMapNode, to);
 		
@@ -127,16 +149,27 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	}
 	private double generateLastingTime(int status)
 	{
-		double seed =  Math.random();
+		double seed = Math.random();
 		if(status==0)
+		{
+			while(seed>cumulativeLastingTimeForStatus0(3600))
+			{	
+				seed = Math.random();
+			}
 			return generateLastingTimeForStatus0(seed);
+		}
 		else
+		{
+			while(seed>cumulativeLastingTimeForStatus1(3600))
+			{	
+				seed = Math.random();
+			}
 			return generateLastingTimeForStatus1(seed);
-		
+		}
 	}
 	private double generateLastingTimeForStatus1(double seed)
 	{
-		int maxLength = 20000;
+		int maxLength = 3600;
 		int tmpLen_bak_max = maxLength;
 		int tmpLen_bak_min = 0;
 		int tmpLen = maxLength/2;
@@ -169,7 +202,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	
 	private double generateLastingTimeForStatus0(double seed)
 	{
-		int maxLength = 20000;
+		int maxLength = 3600;
 		int tmpLen_bak_max = maxLength;
 		int tmpLen_bak_min = 0;
 		int tmpLen = maxLength/2;
@@ -226,39 +259,43 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	}
 
 	private double generateSpeedForStatus0() {
-		double  prob = Math.random();
-		while(prob>cumulativeSpeedDistributionForStatus0(120))
-		{
-			prob = Math.random();
-		}
-		int speed = 0; 
-		while(prob>cumulativeSpeedDistributionForStatus0(speed))
-		{
-			speed++;
-		}
+//		double  prob = Math.random();
+//		while(prob>cumulativeSpeedDistributionForStatus0(120))
+//		{
+//			prob = Math.random();
+//		}
+//		int speed = 0; 
+//		while(prob>cumulativeSpeedDistributionForStatus0(speed))
+//		{
+//			speed++;
+//		}
+		
+		double speed = Math.random()*30;
 
-		return speed;
+		return speed/3.6;
 	}
 	
 	private double generateSpeedForStatus1() {
 
-		double  prob = Math.random();
-		while(prob>cumulativeSpeedDistributionForStatus1(120))
-		{
-			prob = Math.random();
-		}
-		int speed = 0; 
-		while(prob>cumulativeSpeedDistributionForStatus1(speed))
-		{
-			speed++;
-		}
+//		double  prob = Math.random();
+//		while(prob>cumulativeSpeedDistributionForStatus1(120))
+//		{
+//			prob = Math.random();
+//		}
+//		int speed = 0; 
+//		while(prob>cumulativeSpeedDistributionForStatus1(speed))
+//		{
+//			speed++;
+//		}
+		
+		double speed = Math.random()*40;
 
-		return speed;
+		return speed/3.6;
 	}
 	
 	private double cumulativeSpeedDistributionForStatus0(int v)
 	{
-		if(v<0)return 0.0;
+		if(v==0)return 0.660763;
 		if(v<=40) return 0.0059774*v+0.660763;
 		if(v<=120) return 1.0-Math.exp(-0.0644895*v+0.383622);		
 		return 1.0;
@@ -266,7 +303,7 @@ public class STARTMovement extends ShortestPathMapBasedMovement {
 	
 	private double cumulativeSpeedDistributionForStatus1(int v)
 	{
-		if(v<0) return 0;
+		if(v==0)return 0.217714;
 		if(v<=40) return 0.0127845*v+0.217714;
 		if(v<=120) return 1.0-Math.exp(-0.0642494*v+1.45314);
 		return 1.0;
