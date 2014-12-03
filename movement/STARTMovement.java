@@ -123,8 +123,7 @@ SwitchableMovement {
 		this.setTimer();
 		Cell c = event_regions[this.status].fromMN2Cell(this.lastMapNode);
 		MapNode to = event_regions[reverseStatus(this.status)].findMapNodeInDis(this.lastMapNode.getLocation(),
-				c.region_id,
-				this.speed*this.duration);
+				c.region_id);
 		List<MapNode> nodePath = getPathFinder().getShortestPath(lastMapNode, to);
 		
 		// this assertion should never fire if the map is checked in read phase
@@ -137,12 +136,7 @@ SwitchableMovement {
 			dis+=distance(source.getLocation(),node.getLocation());//计算实际距离
 			p.addWaypoint(node.getLocation());
 		}
-		if(this.duration!=0)//计算实际速度
-		{
-			speed = dis/this.duration;
-			p.setSpeed(speed);
-			
-		}
+
 		lastMapNode = to;
 		this.status=this.status==0?1:0;//改变车辆状态。
 		return p;
@@ -286,36 +280,36 @@ SwitchableMovement {
 	}
 
 	private double generateSpeedForStatus0() {
-		double  prob = Math.random();
-		while(prob>cumulativeSpeedDistributionForStatus0(120))
-		{
-			prob = Math.random();
-		}
-		int speed = 0; 
-		while(prob>cumulativeSpeedDistributionForStatus0(speed))
-		{
-			speed++;
-		}
+//		double  prob = Math.random();
+//		while(prob>cumulativeSpeedDistributionForStatus0(120))
+//		{
+//			prob = Math.random();
+//		}
+//		int speed = 0; 
+//		while(prob>cumulativeSpeedDistributionForStatus0(speed))
+//		{
+//			speed++;
+//		}
 		
-		//double speed = Math.random()*80;
+		double speed = Math.random()*60+1.0;
 
 		return (double)speed/3.6;
 	}
 	
 	private double generateSpeedForStatus1() {
 
-		double  prob = Math.random();
-		while(prob>cumulativeSpeedDistributionForStatus1(120))
-		{
-			prob = Math.random();
-		}
-		int speed = 0; 
-		while(prob>cumulativeSpeedDistributionForStatus1(speed))
-		{
-			speed++;
-		}
+//		double  prob = Math.random();
+//		while(prob>cumulativeSpeedDistributionForStatus1(120))
+//		{
+//			prob = Math.random();
+//		}
+//		int speed = 0; 
+//		while(prob>cumulativeSpeedDistributionForStatus1(speed))
+//		{
+//			speed++;
+//		}
 		
-		//double speed = Math.random()*80;
+		double speed = Math.random()*80+1;
 
 		return (double)speed/3.6;
 	}
