@@ -291,9 +291,9 @@ SwitchableMovement {
 //			speed++;
 //		}
 		
-		double speed = Math.random()*60+1.0;
+		//double speed = Math.random()*60+1.0;
 
-		return (double)speed/3.6;
+		return 3.83;
 	}
 	
 	private double generateSpeedForStatus1() {
@@ -309,9 +309,9 @@ SwitchableMovement {
 //			speed++;
 //		}
 		
-		double speed = Math.random()*80+1;
+		//double speed = Math.random()*80+1;
 
-		return (double)speed/3.6;
+		return 7.356;
 	}
 	
 	private double cumulativeSpeedDistributionForStatus0(int v)
