@@ -25,7 +25,7 @@ public class Path  {
 	public Path() {
 		this.nextWpIndex = 0;
 		this.coords = new ArrayList<Coord>();
-		this.speeds = new ArrayList<Double>(1);
+		this.speeds = new ArrayList<Double>();
 		
 		
 	}

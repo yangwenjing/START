@@ -30,7 +30,17 @@ SwitchableMovement {
 	private double speed;
 	/** 记录节点的持续时长 */
 	private double duration;
-	
+	/**
+	 * e=-0.00217593
+a=0.971101
+e2 =-0.00103644
+a2=0.988955
+
+f(x)=a-exp(e*x)
+g(x)=a2-exp(e2*x)
+	 * @param seed
+	 * @return
+	 */
 	/** 状态0  设置持续时长的参数 */
 	private static double DURATION_A_FOR_STATUS0 = 0.971101;
 	private static double DURATION_PARA_FOR_STATUS0 = 0.00217593;
@@ -99,27 +109,9 @@ SwitchableMovement {
 	 */
 	@Override
 	public Path getPath() {
-		this.speed = generateSpeed(this.status);
+//		this.speed = generateSpeed(this.status);
 		Path p = new Path(speed);
-		//System.out.println("START get path ....");
 		
-		if(speed==0)
-		{
-			//System.out.println("速度为0的情况");
-			p.addWaypoint(this.lastMapNode.getLocation());
-			this.status=this.status==0?1:0;//改变车辆状态。
-			this.setTimer();
-			return p;
-		}
-//		//设置等待时间
-//		if(SimClock.getIntTime()<this.timer)
-//		{
-//			System.out.println("持续时间没用完的情况");
-//			p.addWaypoint(this.lastMapNode.getLocation());
-//			p.setSpeed(0);
-//			return p;
-//		}
-
 		this.setTimer();
 		Cell c = event_regions[this.status].fromMN2Cell(this.lastMapNode);
 		MapNode to = event_regions[reverseStatus(this.status)].findMapNodeInDis(this.lastMapNode.getLocation(),
@@ -137,12 +129,10 @@ SwitchableMovement {
 			dis+=distance(source.getLocation(),node.getLocation());//计算实际距离
 			p.addWaypoint(node.getLocation());
 		}
-		if(this.duration!=0)//计算实际速度
-		{
-			speed = dis/this.duration;
-			p.setSpeed(speed);
-			
-		}
+		
+		speed = dis/this.duration;
+		p.setSpeed(speed);
+		
 		lastMapNode = to;
 		this.status=this.status==0?1:0;//改变车辆状态。
 		return p;
@@ -198,10 +188,14 @@ SwitchableMovement {
 	{
 		int maxLength = 10800;
 		int tmpLen_bak_max = maxLength;
-		int tmpLen_bak_min = 0;
+		int tmpLen_bak_min = 5;
 		int tmpLen = maxLength/2;
-		if(seed>=cumulativeLastingTimeForStatus1(maxLength))return maxLength;
-		if(seed<=cumulativeLastingTimeForStatus1(0)) return 0;
+		while(seed<cumulativeLastingTimeForStatus1(5)||
+				  seed>=cumulativeLastingTimeForStatus1(maxLength)) 
+		{
+				seed = rng.nextDouble();
+		}
+			
 		
 		
 		do{
@@ -226,17 +220,19 @@ SwitchableMovement {
 		
 	}
 	
-	
+
 	private double generateLastingTimeForStatus0(double seed)
 	{
-		int maxLength = 3600;
+		int maxLength = 10800;
 		int tmpLen_bak_max = maxLength;
-		int tmpLen_bak_min = 0;
+		int tmpLen_bak_min = 5;
 		int tmpLen = maxLength/2;
-		if(seed>=cumulativeLastingTimeForStatus0(maxLength))return maxLength;
-		if(seed<=cumulativeLastingTimeForStatus0(0)) return 0;
+		while(seed<cumulativeLastingTimeForStatus0(5)||
+			  seed>=cumulativeLastingTimeForStatus0(maxLength)) 
+		{
+			seed = rng.nextDouble();
+		}
 		
-		//System.out.println("calculate lasting time...");
 		do{
 			if(seed<cumulativeLastingTimeForStatus0(tmpLen))
 			{
@@ -258,10 +254,9 @@ SwitchableMovement {
 		
 		
 	}
-	
+
 	private double cumulativeLastingTimeForStatus0(int timeLength)
 	{
-		if(timeLength<0) return 0;
 		return DURATION_A_FOR_STATUS0-Math.exp(-DURATION_PARA_FOR_STATUS0*timeLength);
 		
 	}
