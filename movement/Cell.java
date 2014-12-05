@@ -22,7 +22,9 @@ public class Cell implements Comparable<Cell>{
 	}
 	@Override
 	public int compareTo(Cell arg0) {
-		return this.num>=arg0.num?-1:1;
+		if(this.num>arg0.num)return -1;
+		else if(this.num<arg0.num)return 1;
+		return 0;
 	}
 	
 	
