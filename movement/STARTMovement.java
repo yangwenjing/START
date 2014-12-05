@@ -185,24 +185,12 @@ g(x)=a2-exp(e2*x)
 	}
 	private double generateLastingTimeForStatus1(double seed)
 	{
-		int maxLength = 5000;
-		int tmpLen_bak_max = maxLength;
-		int tmpLen_bak_min = 5;
-		int tmpLen = maxLength/2;
 		
-		seed = rng.nextDouble()*maxLength;
+		seed = rng.nextDouble()*cumulativeLastingTimeForStatus1(5000);
 		
+		double duration = duration1(seed);
 		
-		double tlen = 5;
-		while(tlen<maxLength)
-		{
-			if(cumulativeLastingTimeForStatus1(tlen)<seed)
-				tlen+=5;
-			else
-				break;
-		}
-		
-		return tlen;
+		return duration;
 		
 		
 		
@@ -211,22 +199,11 @@ g(x)=a2-exp(e2*x)
 
 	private double generateLastingTimeForStatus0(double seed)
 	{
-		int maxLength = 5000;
-		int tmpLen_bak_max = maxLength;
-		int tmpLen_bak_min = 5;
-		int tmpLen = maxLength/2;
-		seed = rng.nextDouble()*maxLength;
-		double tlen = 5;
 		
-		while(tlen<maxLength)
-		{
-			if(cumulativeLastingTimeForStatus0(tlen)<seed)
-				tlen+=5;
-			else
-				break;
-		}
+		seed = rng.nextDouble()*cumulativeLastingTimeForStatus0(5000);
+		double duration = duration0(seed);
 		
-		return tlen;
+		return duration;
 		
 		
 	}
@@ -241,6 +218,16 @@ g(x)=a2-exp(e2*x)
 		if(timeLength<0) return 0;
 		return DURATION_A_FOR_STATUS1-Math.exp(-DURATION_PARA_FOR_STATUS1*timeLength);
 		
+	}
+	
+	private double duration0(double seed)
+	{
+		return Math.log(DURATION_A_FOR_STATUS0-seed)/-DURATION_PARA_FOR_STATUS0;
+	}
+	
+	private double duration1(double seed)
+	{
+		return Math.log(DURATION_A_FOR_STATUS1-seed)/-DURATION_PARA_FOR_STATUS1;
 	}
 	
 	/**
