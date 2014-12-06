@@ -187,7 +187,10 @@ g(x)=a2-exp(e2*x)
 	{
 		
 		seed = rng.nextDouble()*cumulativeLastingTimeForStatus1(5000);
-		
+		while(seed<cumulativeLastingTimeForStatus1(5))
+		{
+			seed = rng.nextDouble()*cumulativeLastingTimeForStatus1(5000);
+		}
 		double duration = duration1(seed);
 		
 		return duration;
@@ -201,6 +204,10 @@ g(x)=a2-exp(e2*x)
 	{
 		
 		seed = rng.nextDouble()*cumulativeLastingTimeForStatus0(5000);
+		while(seed<cumulativeLastingTimeForStatus0(5))
+		{
+			seed = rng.nextDouble()*cumulativeLastingTimeForStatus0(5000);
+		}
 		double duration = duration0(seed);
 		
 		return duration;

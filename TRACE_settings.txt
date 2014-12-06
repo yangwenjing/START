@@ -40,7 +40,7 @@ Group1.speed = 0.0,33.3
 
 # group1 (pedestrians) specific settings
 
-ExternalMovement.file = data/VTD20110306_after_format_out.txt
+ExternalMovement.file = data/VTD20110305_after_format_out_4000.txt
 #################################################################################################
 ## Message creation parameters 
 # How many event generators
