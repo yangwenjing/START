@@ -79,7 +79,7 @@ Events2.prefix = M
 # seed for movement models' pseudo random number generator (default = 0)
 MovementModel.rngSeed = 1
 # World's size for Movement Models without implicit size (width, height; meters)
-MovementModel.worldSize = 24445,23584
+MovementModel.worldSize = 30556,29480
 # How long time to move hosts in the world before real simulation
 MovementModel.warmup = 0
 
