@@ -45,7 +45,7 @@ Group1.speed = 0.0, 55.0
 #################################################################################################
 ## Message creation parameters 
 # How many event generators
-Events.nrof = 4000
+Events.nrof = 0
 # Class of the first event generator
 Events1.class = MessageEventGenerator
 # (following settings are specific for the MessageEventGenerator class)

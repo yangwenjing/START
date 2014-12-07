@@ -130,12 +130,20 @@ g(x)=a2-exp(e2*x)
 		}
 		
 		this.speed = dis/this.duration;
+		if(speed<1||speed>=44.4)
+			this.speed = changeSpeed(this.speed);
 		p.setSpeed(this.speed);
 
 		lastMapNode = to;
 		this.status=this.status==0?1:0;//¸Ä±ä³µÁ¾×´Ì¬¡£
 		return p;
-	}	
+	}
+	
+	private double changeSpeed(double speed)
+	{
+		
+		return rng.nextDouble()*44.4;
+	}
 	
 	
 	private double distance(Coord location, Coord location2) {
