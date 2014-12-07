@@ -110,7 +110,7 @@ g(x)=a2-exp(e2*x)
 	@Override
 	public Path getPath() {
 //		this.speed = generateSpeed(this.status);
-		Path p = new Path(speed);
+		Path p = new Path();
 		
 		this.setTimer();
 		Cell c = event_regions[this.status].fromMN2Cell(this.lastMapNode);
@@ -129,8 +129,8 @@ g(x)=a2-exp(e2*x)
 			p.addWaypoint(node.getLocation());
 		}
 		
-		speed = dis/this.duration;
-		p.setSpeed(speed);
+		this.speed = dis/this.duration;
+		p.setSpeed(this.speed);
 
 		lastMapNode = to;
 		this.status=this.status==0?1:0;//改变车辆状态。
@@ -151,7 +151,7 @@ g(x)=a2-exp(e2*x)
 	 */
 	@Override
 	public Coord getInitialLocation() {
-		System.out.println("**获取初始位置**");
+		//System.out.println("**获取初始位置**");
 
 		MapNode node = this.event_regions[this.status].getInitMapNode();
 		this.lastMapNode = node;
@@ -187,12 +187,13 @@ g(x)=a2-exp(e2*x)
 	{
 		
 		seed = rng.nextDouble()*cumulativeLastingTimeForStatus1(5000);
-		while(seed<cumulativeLastingTimeForStatus1(5))
-		{
-			seed = rng.nextDouble()*cumulativeLastingTimeForStatus1(5000);
-		}
-		double duration = duration1(seed);
 		
+		double duration = duration1(seed);
+		if(duration<=0)
+		{
+			System.out.println("生成duration<=0");
+			duration = rng.nextDouble()*5000+1;
+		}
 		return duration;
 		
 		
@@ -204,12 +205,13 @@ g(x)=a2-exp(e2*x)
 	{
 		
 		seed = rng.nextDouble()*cumulativeLastingTimeForStatus0(5000);
-		while(seed<cumulativeLastingTimeForStatus0(5))
-		{
-			seed = rng.nextDouble()*cumulativeLastingTimeForStatus0(5000);
-		}
-		double duration = duration0(seed);
 		
+		double duration = duration0(seed);
+		if(duration<=0)
+		{
+			System.out.println("生成duration<=0");
+			duration = rng.nextDouble()*5000+1;
+		}
 		return duration;
 		
 		
