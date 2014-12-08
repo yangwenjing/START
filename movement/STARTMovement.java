@@ -55,6 +55,12 @@ g(x)=a2-exp(e2*x)
 	public static final String TRANSITION_PROB_1 = "TransProbFile1";
 	public static final String CELLS_0 = "Cell0";
 	public static final String CELLS_1 = "Cell1";
+	/**
+	 * a=0.11798
+b=0.0058637
+	 */
+	public static double A0 = 0.11798;
+	public static double A1 = 0.0058637;
 
 	private DijkstraPathFinder pathFinder;
 	
@@ -109,8 +115,8 @@ g(x)=a2-exp(e2*x)
 	 */
 	@Override
 	public Path getPath() {
-//		this.speed = generateSpeed(this.status);
-		Path p = new Path();
+		this.speed = generateSpeed(this.status);
+		Path p = new Path(speed);
 		
 		this.setTimer();
 		Cell c = event_regions[this.status].fromMN2Cell(this.lastMapNode);
@@ -128,11 +134,6 @@ g(x)=a2-exp(e2*x)
 			dis+=distance(source.getLocation(),node.getLocation());//计算实际距离
 			p.addWaypoint(node.getLocation());
 		}
-		
-		this.speed = dis/this.duration;
-		if(speed<1||speed>=44.4)
-			this.speed = changeSpeed(this.speed);
-		p.setSpeed(this.speed);
 
 		lastMapNode = to;
 		this.status=this.status==0?1:0;//改变车辆状态。
@@ -261,55 +262,56 @@ g(x)=a2-exp(e2*x)
 	}
 
 	private double generateSpeedForStatus0() {
-//		double  prob = Math.random();
-//		while(prob>cumulativeSpeedDistributionForStatus0(120))
-//		{
-//			prob = Math.random();
-//		}
-//		int speed = 0; 
-//		while(prob>cumulativeSpeedDistributionForStatus0(speed))
-//		{
-//			speed++;
-//		}
-		
-		//double speed = Math.random()*60+1.0;
+		double seed = rng.nextDouble()*speed_dis_for_status0(44.4);
+		double sp = reverse_speed_for_status0(seed);
+		if(sp<0||sp>44.4)
+			System.out.println(sp);
+		return sp;
 
-		return 3.83;
 	}
 	
 	private double generateSpeedForStatus1() {
-
-//		double  prob = Math.random();
-//		while(prob>cumulativeSpeedDistributionForStatus1(120))
-//		{
-//			prob = Math.random();
-//		}
-//		int speed = 0; 
-//		while(prob>cumulativeSpeedDistributionForStatus1(speed))
-//		{
-//			speed++;
-//		}
-		
-		//double speed = Math.random()*80+1;
-
-		return 7.356;
+		double seed = rng.nextDouble()*speed_dis_for_status1(44.4);
+		double sp = reverse_speed_for_status1(seed);
+		if(sp<0||sp>44.4)
+			System.out.println(sp);
+		return sp;
 	}
 	
-	private double cumulativeSpeedDistributionForStatus0(int v)
+	private double reverse_speed_for_status0(double result)
 	{
-		if(v==0)return 0.660763;
-		if(v<=40) return 0.0059774*v+0.660763;
-		if(v<=120) return 1.0-Math.exp(-0.0644895*v+0.383622);		
-		return 1.0;
+		return Math.pow(Math.log(1-result),1/1.5);
 	}
 	
-	private double cumulativeSpeedDistributionForStatus1(int v)
+	private double reverse_speed_for_status1(double result)
 	{
-		if(v==0)return 0.217714;
-		if(v<=40) return 0.0127845*v+0.217714;
-		if(v<=120) return 1.0-Math.exp(-0.0642494*v+1.45314);
-		return 1.0;
+		return Math.pow(Math.log(1-result),1/2.5);
 	}
+	
+	private double speed_dis_for_status0(double x){
+		return 1-1/Math.exp(A0*Math.pow(x, 1.5));
+	}
+	
+	private double speed_dis_for_status1(double x)
+	{
+		return 1-1/Math.exp(A1*Math.pow(x, 2.5));
+	}
+	
+//	private double cumulativeSpeedDistributionForStatus0(int v)
+//	{
+//		if(v==0)return 0.660763;
+//		if(v<=40) return 0.0059774*v+0.660763;
+//		if(v<=120) return 1.0-Math.exp(-0.0644895*v+0.383622);		
+//		return 1.0;
+//	}
+//	
+//	private double cumulativeSpeedDistributionForStatus1(int v)
+//	{
+//		if(v==0)return 0.217714;
+//		if(v<=40) return 0.0127845*v+0.217714;
+//		if(v<=120) return 1.0-Math.exp(-0.0642494*v+1.45314);
+//		return 1.0;
+//	}
 	
 	@Override
 	public STARTMovement replicate() {
