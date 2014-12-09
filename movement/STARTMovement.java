@@ -158,14 +158,14 @@ b=0.0058637
 	 * 初始化节点位置
 	 * 在DTNHost中被调用
 	 */
-//	@Override
-//	public Coord getInitialLocation() {
-//		//System.out.println("**获取初始位置**");
-//
-//		MapNode node = this.event_regions[this.status].getInitMapNode();
-//		this.lastMapNode = node;
-//		return this.lastMapNode.getLocation();
-//	}
+	@Override
+	public Coord getInitialLocation() {
+		//System.out.println("**获取初始位置**");
+
+		MapNode node = this.event_regions[this.status].getInitMapNode();
+		this.lastMapNode = node;
+		return this.lastMapNode.getLocation();
+	}
 	
 	private void setTimer() {
 		this.duration = generateLastingTime(this.status);
