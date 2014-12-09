@@ -158,14 +158,14 @@ b=0.0058637
 	 * 初始化节点位置
 	 * 在DTNHost中被调用
 	 */
-	@Override
-	public Coord getInitialLocation() {
-		//System.out.println("**获取初始位置**");
-
-		MapNode node = this.event_regions[this.status].getInitMapNode();
-		this.lastMapNode = node;
-		return this.lastMapNode.getLocation();
-	}
+//	@Override
+//	public Coord getInitialLocation() {
+//		//System.out.println("**获取初始位置**");
+//
+//		MapNode node = this.event_regions[this.status].getInitMapNode();
+//		this.lastMapNode = node;
+//		return this.lastMapNode.getLocation();
+//	}
 	
 	private void setTimer() {
 		this.duration = generateLastingTime(this.status);
@@ -264,28 +264,33 @@ b=0.0058637
 	private double generateSpeedForStatus0() {
 		double seed = rng.nextDouble()*speed_dis_for_status0(44.4);
 		double sp = reverse_speed_for_status0(seed);
-		if(sp<0||sp>44.4)
-			System.out.println(sp);
+//		if(sp<0||sp>44.4)
+//			System.out.println(sp);
+//		if(sp>10)
+//			System.out.print(sp);
 		return sp;
 
 	}
 	
 	private double generateSpeedForStatus1() {
 		double seed = rng.nextDouble()*speed_dis_for_status1(44.4);
+		//System.out.println(seed);
 		double sp = reverse_speed_for_status1(seed);
-		if(sp<0||sp>44.4)
-			System.out.println(sp);
+//		if(sp<0||sp>44.4)
+//			System.out.println(sp);
+//		if(sp>10)
+//			System.out.print(sp);
 		return sp;
 	}
 	
 	private double reverse_speed_for_status0(double result)
 	{
-		return Math.pow(Math.log(1-result),1/1.5);
+		return Math.pow(Math.log(1/(1-result))/A0,1/1.5);
 	}
 	
 	private double reverse_speed_for_status1(double result)
 	{
-		return Math.pow(Math.log(1-result),1/2.5);
+		return Math.pow(Math.log(1/(1-result))/A1,1/2.5);
 	}
 	
 	private double speed_dis_for_status0(double x){

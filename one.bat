@@ -1,1 +1,1 @@
-java -Xmx1100M -cp .;lib/ECLA.jar;lib/DTNConsoleConnection.jar core.DTNSim %*
+java -Xmx1200M -cp .;lib/ECLA.jar;lib/DTNConsoleConnection.jar core.DTNSim %*
