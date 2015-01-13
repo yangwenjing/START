@@ -3,3 +3,5 @@ reports/
 *.bak
 data/*
 *.pdf
+
+default_setting*
