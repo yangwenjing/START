@@ -1,4 +1,4 @@
-Scenario.name = %%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_range%%btInterface.transmitRange%%
+Scenario.name = map_2009_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_range%%btInterface.transmitRange%%
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
@@ -85,7 +85,7 @@ MovementModel.warmup = 0
 
 ######################设置地图#########################################
 MapBasedMovement.nrofMapFiles = 1
-MapBasedMovement.mapFile1 = data/beigjing2.wkt
+MapBasedMovement.mapFile1 = data/map2009_out.wkt
 ######################读取区域文件#########################################
 
 Group.Cell0 = data/cells/event0.txt
