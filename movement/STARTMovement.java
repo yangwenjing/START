@@ -93,7 +93,7 @@ b=0.0058637
 	}
 
 	/**
-	 * @param mbm
+	 * @param mbm Ô­À´µÄSTARTMovement
 	 */
 	public STARTMovement(STARTMovement mbm) {
 		super(mbm);
