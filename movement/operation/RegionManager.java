@@ -64,7 +64,9 @@ public class RegionManager {
     /**
      *  TODO 从to region中按概率选区
      */
-    public String toRegion(int time, int event,String fromRegion_id, double prob) throws Exception {
+    public String toRegion(int time, int event,String fromRegion_id) throws Exception {
+        double prob = random.nextDouble();
+
         String timeEventKey = Scene.getTimeFromRegionKey(time, fromRegion_id);
         Hashtable<String,Double>toRegionProbs = this.scene.timeRegionTransProbs.get(timeEventKey);
 
@@ -102,15 +104,14 @@ public class RegionManager {
      * @param time 由当前时刻
      * @param event 事件值
      * @param coord 当前位置
-     * @param prob 概率
      * @return 目的的地图
      */
-    public MapNode fromCoordToNextMapNode(int time,int event,Coord coord,double prob)
+    public MapNode fromCoordToNextMapNode(int time,int event,Coord coord)
     {
         String gridKey = fromCoordToGrid(coord);
         String region_key = fromTimeEventGridToRegion(time, event, gridKey);
         try {
-            String toRegion_key = toRegion(time,event,region_key,prob);
+            String toRegion_key = toRegion(time,event,region_key);
             MapNode mapNode = toMapNode(toRegion_key);
             return mapNode;
 
