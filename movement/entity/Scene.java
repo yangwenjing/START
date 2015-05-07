@@ -44,6 +44,9 @@ public class Scene {
     public Hashtable<String, Hashtable<String, ExtRegion>> timeEventRegionSets = null;//建立time－region的关系
     public Hashtable<String, ExtRegion> timeGrid2Region = null;
 
+
+    public Hashtable<String, Hashtable<String, Double>> timeRegionTransProbs = null;//记录区域转移概率矩阵之间的关系
+
     /***************end of 参数区*******************/
     /**
      * 初始化获取grid，region，regionset
@@ -53,6 +56,18 @@ public class Scene {
         settings.setNameSpace("XXX");
         //TODO 读取设置
         initGrid();
+
+        initRegions();
+
+        loadTransProb();
+    }
+
+    /**
+     * 初始化区域转移矩阵
+     */
+    private void loadTransProb() {
+
+
     }
 
     /**
@@ -79,6 +94,11 @@ public class Scene {
     }
 
 
+    /**
+     * 载入事件对应的区域集合
+     *
+     * @param event 0 1
+     */
     private void loadGrid2Region2RegionSet(int event) {
         // TODO Auto-generated method stub
         //time gain size 24
@@ -110,17 +130,17 @@ public class Scene {
                 String gridKey = ExtGrid.getKeyForGrid(x, y);
                 ExtGrid grid = this.grids.get(gridKey);
 
-                ExtRegion region = this.getRegionFromPool(region_id,event);
+                ExtRegion region = this.getRegionFromPool(region_id, event);
 
                 region.grids.put(gridKey, grid);
-                _regions.put(ExtRegion.getRegionKey(region_id,event), region);
+                _regions.put(ExtRegion.getRegionKey(region_id, event), region);
 
                 /**
                  * 建立反向索引
                  * from time,grid to region
                  */
                 for (int j = 0; j < (timeList.get(i)).size(); j++) {
-                    String tgKey = getTimeGridKey(timeList.get(i).get(j), gridKey);
+                    String tgKey = getTimeEventGridKey(timeList.get(i).get(j), event, gridKey);
                     this.timeGrid2Region.put(tgKey, region);
                 }
 
@@ -128,7 +148,7 @@ public class Scene {
 
             for (int j = 0; j < (timeList.get(i)).size(); j++) {
                 int _time = timeList.get(i).get(j);
-                String teKey = getTimeEventKey(_time,event);
+                String teKey = getTimeEventKey(_time, event);
                 this.timeEventRegionSets.put(teKey, _regions);
             }
 
@@ -143,6 +163,13 @@ public class Scene {
 
     }
 
+    /**
+     * 从Region池中获取到region
+     *
+     * @param region_id
+     * @param event
+     * @return
+     */
     private ExtRegion getRegionFromPool(int region_id, int event) {
         String region_key = ExtRegion.getRegionKey(region_id, event);
         if (!this.regionPool.contains(region_key)) {
@@ -151,12 +178,33 @@ public class Scene {
         }
         return this.regionPool.get(region_key);
     }
-    public static String getTimeEventKey(int time, int event)
-    {
+
+
+    /**
+     * 获取从time event构成的索引
+     *
+     * @param time  时刻
+     * @param event 事件 0 1
+     * @return 索引
+     */
+    public static String getTimeEventKey(int time, int event) {
         return time + "-" + event;
     }
 
-    public static String getTimeGridKey(int time, String gridKey) {
-        return time + "-" + gridKey;
+
+    /**
+     * 获取从时间 格子到区域的索引
+     *
+     * @param time    时间
+     * @param gridKey 格子key
+     * @return 索引
+     */
+    public static String getTimeEventGridKey(int time, int event, String gridKey) {
+        return time + "-" + event + "-" + gridKey;
+    }
+
+
+    public static String getTimeFromRegionKey(int time, String region_f) {
+        return time + "-" + region_f;
     }
 }
