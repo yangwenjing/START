@@ -17,17 +17,17 @@ import core.SettingsError;
 
 public class EventAwareRegions {
 	public static int event;
-	/** 需要获得初始化的 map */
+	/** ?????ó?????? map */
 	public static SimMap map=null;
 	
-	/** 用于从坐标 x,y 到cell的映射  */
+	/** ???????? x,y ??cell?????  */
 	private Hashtable <String, Cell>xy2Cell;
 	
-	/**区域转移概率矩阵 */
-	private Hashtable <String, FromToProb>transition_prob;//String 为 from_to的组合
+	/**????????????? */
+	private Hashtable <String, FromToProb>transition_prob;//String ? from_to?????
 	
 	
-	/**记录 cell中的事件数，用于初始位置的选择 */
+	/**??? cell?е????????????λ?????? */
 	private List<Cell> cells;
 	private int sum_events;
 	public String Area_matrix_inputFileName;
@@ -40,10 +40,10 @@ public class EventAwareRegions {
 	
 	//public Hashtable<Integer,List<Cell>> region_to_cells;
 	/** 
-	 * 处理地图点
-	 * 将地图点与region对应 
-	 * 一个regionid 对应多个mapid
-	 * 得到regionid就可以找到一个map node
+	 * ????????
+	 * ?????????region??? 
+	 * ???regionid ??????mapid
+	 * ???regionid???????????map node
 	 * 
 	 * key: region_id;
 	 * 
@@ -137,7 +137,7 @@ public class EventAwareRegions {
 		
 		System.out.println("** size of Beijing2:"+map.getNodes().size());
 		System.out.println("** region size:"+this.from_regions.size());
-		// TODO 对region2MapNode初始化
+		// TODO ??region2MapNode?????
 		System.out.println("LoadRegions to MapNode");
 		
 		for(int i:this.from_regions)
@@ -195,7 +195,7 @@ public class EventAwareRegions {
 	
 	public MapNode findMapNodeInDis(Coord coord, int region_from)
 	{
-		//System.out.println("**找到范围内的mapnode**");
+		//System.out.println("**?????Χ???mapnode**");
 		
 		List<Cell>cells_temp = new LinkedList<Cell>();
 		List<FromToProb> ftblist_temp = new LinkedList<FromToProb>();
@@ -310,7 +310,7 @@ public class EventAwareRegions {
 	}
 	
 	/**
-	 * 从文件中读取区域转移概率矩阵
+	 * ??????ж???????????????
 	 */
 	private void loadTransitionProb() {
 		// TODO Auto-generated method stub
