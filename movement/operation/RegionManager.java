@@ -21,6 +21,9 @@ import java.util.Random;
  * Created by ywj on 15/5/7.
  */
 public class RegionManager {
+
+
+
     private static RegionManager ourInstance = null;
 
     public static RegionManager getInstance(Settings settings) {

@@ -16,6 +16,16 @@ import java.util.*;
  * Created by ywj on 15/5/7.
  */
 public class Scene {
+
+
+    /**
+     * REGION SETTINGS
+     */
+    private static final String SCENE_MANAGER_NS = "Scene";
+    public static final String NROF_FILES_S = "nrofMapFiles";
+    public static final String FILE_S = "mapFile";
+
+
     private static Scene ourInstance = null;
 
     public static Scene getInstance(Settings settings) {
@@ -59,7 +69,31 @@ public class Scene {
      */
     private Scene(Settings settings) {
         //read settings
-        settings.setNameSpace("XXX");
+        settings.setNameSpace(SCENE_MANAGER_NS);
+//
+//        if (settings.contains(MAP_SELECT_S)) {
+//            this.okMapNodeTypes = settings.getCsvInts(MAP_SELECT_S);
+//            for (int i : okMapNodeTypes) {
+//                if (i < MapNode.MIN_TYPE || i > MapNode.MAX_TYPE) {
+//                    throw new SettingsError("Map type selection '" + i +
+//                            "' is out of range for setting " +
+//                            settings.getFullPropertyName(MAP_SELECT_S));
+//                }
+//                if (i > nrofMapFilesRead) {
+//                    throw new SettingsError("Can't use map type selection '" + i
+//                            + "' for setting " +
+//                            settings.getFullPropertyName(MAP_SELECT_S)
+//                            + " because only " + nrofMapFilesRead +
+//                            " map files are read");
+//                }
+//            }
+//        }
+//        else {
+//            this.okMapNodeTypes = null;
+//        }
+
+
+
         //TODO 读取设置
         initGrid();
 
