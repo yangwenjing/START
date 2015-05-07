@@ -19,7 +19,6 @@ public class ExtRegion {
     public Hashtable<String,ExtGrid> grids;
     public List<Integer> times;
 
-    public boolean contain_mapNode;
 
     public ExtRegion(int region_id,int event)
     {
@@ -27,7 +26,6 @@ public class ExtRegion {
         this.region_id = region_id;
         this.event = event;
         this.grids = new Hashtable<String,ExtGrid>();
-        this.contain_mapNode = false;
     }
 
     public static String getRegionKey(int region_id,int event)

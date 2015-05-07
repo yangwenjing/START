@@ -1,7 +1,11 @@
 package movement.entity;
 
+import core.Coord;
 import core.Settings;
 import core.SettingsError;
+import movement.Cell;
+import movement.map.MapNode;
+import movement.map.SimMap;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,6 +33,7 @@ public class Scene {
     public static int beginTime;//开始时刻
     public static int timeLength;//仿真几小时
     public static List<List<Integer>> timeList = new ArrayList<List<Integer>>();
+    public static SimMap map=null;
 
     /**
      * grid的x,y长度
@@ -44,6 +49,7 @@ public class Scene {
     public Hashtable<String, Hashtable<String, ExtRegion>> timeEventRegionSets = null;//建立time－region的关系
     public Hashtable<String, ExtRegion> timeGrid2Region = null;
 
+    public Hashtable<String, List<MapNode>>region2MapNode = null;
 
     public Hashtable<String, Hashtable<String, Double>> timeRegionTransProbs = null;//记录区域转移概率矩阵之间的关系
 
@@ -92,6 +98,46 @@ public class Scene {
         loadGrid2Region2RegionSet(1);
 
     }
+
+
+    /**
+     * 对应区域id和mapnode
+     */
+    private void loadRegion2MapNode() {
+        this.region2MapNode = new Hashtable<String , List<MapNode>>();
+
+        System.out.println("** size of Beijing2:" + map.getNodes().size());
+        System.out.println("LoadRegions to MapNode");
+
+
+        for(MapNode mapNode:map.getNodes())
+        {
+            Coord coord = mapNode.getLocation();
+            String grid_id = ExtGrid.getKeyForGrid((int)coord.getX(),(int)coord.getY());
+            for(ExtRegion _region:this.regionPool.values())
+            {
+                if(_region.grids.contains(grid_id))
+                {
+                    if(!this.region2MapNode.contains(_region.region_key))
+                    {
+                        this.region2MapNode.put(_region.region_key,new ArrayList<MapNode>());
+                    }
+                    this.region2MapNode.get(_region.region_key).add(mapNode);
+                }
+            }
+        }
+
+    }
+
+
+    public MapNode randomGetMapNode(){
+        int len = map.getNodes().size();
+        Random random = new Random();
+        return map.getNodes().get(random.nextInt(len));
+    }
+
+
+
 
 
     /**

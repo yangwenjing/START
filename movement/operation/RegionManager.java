@@ -2,11 +2,15 @@ package movement.operation;
 
 import core.Coord;
 import core.Settings;
+import movement.Region;
 import movement.entity.ExtGrid;
 import movement.entity.Scene;
+import movement.map.MapNode;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Random;
 
 /**
  * 目的是由当前区域找到对应地图上的目的节点
@@ -28,6 +32,8 @@ public class RegionManager {
     }
 
     public Scene scene = null;
+    public static Random random = new Random();
+
 
     private RegionManager(Settings settings) {
         this.scene = Scene.getInstance(settings);
@@ -76,5 +82,42 @@ public class RegionManager {
         throw new Exception("No region select");
     }
 
+    /**
+     * 由目的区域找到对应的地图点
+     * @param toRegionId
+     * @return
+     * @throws Exception
+     */
+    public MapNode toMapNode(String toRegionId) throws Exception {
+        if(this.scene.region2MapNode.contains(toRegionId)) {
+            List<MapNode> mapNodes = this.scene.region2MapNode.get(toRegionId);
+            int index = random.nextInt(mapNodes.size());
+            return mapNodes.get(index);
+        }
+        throw new Exception("WARNING:*RegionManager:toMapNode:"+toRegionId+"has no mapnode!");
+    }
+
+    /**
+     *
+     * @param time 由当前时刻
+     * @param event 事件值
+     * @param coord 当前位置
+     * @param prob 概率
+     * @return 目的的地图
+     */
+    public MapNode fromCoordToNextMapNode(int time,int event,Coord coord,double prob)
+    {
+        String gridKey = fromCoordToGrid(coord);
+        String region_key = fromTimeEventGridToRegion(time, event, gridKey);
+        try {
+            String toRegion_key = toRegion(time,event,region_key,prob);
+            MapNode mapNode = toMapNode(toRegion_key);
+            return mapNode;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return scene.randomGetMapNode();
+        }
+    }
 
 }
