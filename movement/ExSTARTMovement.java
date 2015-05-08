@@ -100,25 +100,34 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
     }
 
 
-
-
+    /**
+     * 计算两个地点之间的距离
+     * 为了防止速度过小
+     * @param location 地点1
+     * @param location2 地点2
+     * @return
+     */
     private static double distance(Coord location, Coord location2) {
-        // TODO Auto-generated method stub
         double x = Math.pow(location.getX()-location2.getY(), 2);
         double y = Math.pow(location.getY()-location2.getY(), 2);
         return Math.sqrt(x+y);
     }
 
-    public void reverseStatus()
-    {
-        this.status = this.status==0?1:0;
+    /**
+     * 反转状态
+     */
+    public void reverseStatus() {
+        this.status = this.status == 0 ? 1 : 0;
     }
 
-    public MapNode getNextMapNode()
-    {
+    /**
+     * 由当前位置状态获取下一个地点
+     * @return MapNode 目的地点的地图节点
+     */
+    public MapNode getNextMapNode() {
 
-        int _time = this.beginTime+ (int) Math.floor(SimClock.getIntTime()/3600);
-        return regionManager.fromCoordToNextMapNode(_time,this.status,this.lastMapNode.getLocation());
+        int _time = this.beginTime + (int) Math.floor(SimClock.getIntTime() / 3600);
+        return regionManager.fromCoordToNextMapNode(_time, this.status, this.lastMapNode.getLocation());
     }
 
     @Override
