@@ -55,6 +55,17 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
             speedManager = SpeedManager.getInstance(settings);
     }
 
+    /**
+     * @param mbm 原来的STARTMovement
+     */
+    public ExSTARTMovement(ExSTARTMovement mbm) {
+        super(mbm);
+        // TODO Auto-generated constructor stub
+        this.status = rng.nextInt(2);
+        this.pathFinder = mbm.pathFinder;
+    }
+
+
     @Override
     public Path getPath() {
 
@@ -108,6 +119,11 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
 
         int _time = this.beginTime+ (int) Math.floor(SimClock.getIntTime()/3600);
         return regionManager.fromCoordToNextMapNode(_time,this.status,this.lastMapNode.getLocation());
+    }
+
+    @Override
+    public ExSTARTMovement replicate() {
+        return new ExSTARTMovement(this);
     }
 
 
