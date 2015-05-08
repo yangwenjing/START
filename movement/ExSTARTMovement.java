@@ -30,20 +30,10 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
     /**
      * 引入仿真开始时刻
      */
+    private static final String BEGIN_TIME = "beginTime";
     private int beginTime;
 
     /** 其他参数和配置不变   */
-
-    public static final String TRANSITION_PROB_0 = "TransProbFile0";
-    public static final String TRANSITION_PROB_1 = "TransProbFile1";
-    public static final String CELLS_0 = "Cell0";
-    public static final String CELLS_1 = "Cell1";
-    /**
-     * a=0.11798
-     * b=0.0058637
-     */
-    public static double A0 = 0.11798;
-    public static double A1 = 0.0058637;
 
     public static RegionManager regionManager = null;
     public static SpeedManager speedManager = null;
@@ -58,6 +48,7 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
     public ExSTARTMovement(Settings settings) {
         super(settings);
 
+        this.beginTime = settings.getInt(BEGIN_TIME);
         if(regionManager==null)
             regionManager = RegionManager.getInstance(settings);
         if(speedManager==null)
