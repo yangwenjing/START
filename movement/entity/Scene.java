@@ -3,7 +3,8 @@ package movement.entity;
 import core.Coord;
 import core.Settings;
 import core.SettingsError;
-import movement.Cell;
+import input.ExternalMovementReader;
+import movement.ExternalMovement;
 import movement.map.MapNode;
 import movement.map.SimMap;
 
@@ -22,8 +23,33 @@ public class Scene {
      * REGION SETTINGS
      */
     private static final String SCENE_MANAGER_NS = "Scene";
-    public static final String NROF_FILES_S = "nrofMapFiles";
-    public static final String FILE_S = "mapFile";
+    public static final String NROF_EVENT0_REGIONFILES_S = "nrofEvent0RegionFiles";
+    public static final String NROF_EVENT1_REGIONFILES_S = "nrofEvent1RegionFiles";
+    public static final String EVENT0_REGION_PROFIX = "event0Region";
+    public static final String EVENT1_REGION_PROFIX = "event1Region";
+
+    //有多少Event0 region
+    //载入多少Event0 region
+    public int nrofEvent0RegionFiles;
+    public String[] event0Regions;
+
+    public int nrofEvent1RegionFiles;
+    public String[] event1Regions;
+
+    //获取事件和区域的对应关系
+
+    //CVS格式数据
+    public static final String EVENT0_REGION_Time = "event0Region";
+    public static final String EVENT1_REGION_Time = "event1Region";
+
+    public int[] Event0RegionTime;
+    public int[] Event1RegionTime;
+
+    //读取区域转移概率矩阵
+    public static final String FILE_TRANS_PROB_S = "transProbFile";//输入文件
+
+    public static String transProbFileName;
+
 
 
     private static Scene ourInstance = null;
@@ -61,6 +87,8 @@ public class Scene {
 
     public Hashtable<String, List<MapNode>>region2MapNode = null;
 
+    //TODO 读入区域转移概率矩阵
+    // key是timeFromRegionKey,采用 time和regionID拼接而成
     public Hashtable<String, Hashtable<String, Double>> timeRegionTransProbs = null;//记录区域转移概率矩阵之间的关系
 
     /***************end of 参数区*******************/
@@ -68,46 +96,65 @@ public class Scene {
      * 初始化获取grid，region，regionset
      */
     private Scene(Settings settings) {
-        //read settings
-        settings.setNameSpace(SCENE_MANAGER_NS);
-//
-//        if (settings.contains(MAP_SELECT_S)) {
-//            this.okMapNodeTypes = settings.getCsvInts(MAP_SELECT_S);
-//            for (int i : okMapNodeTypes) {
-//                if (i < MapNode.MIN_TYPE || i > MapNode.MAX_TYPE) {
-//                    throw new SettingsError("Map type selection '" + i +
-//                            "' is out of range for setting " +
-//                            settings.getFullPropertyName(MAP_SELECT_S));
-//                }
-//                if (i > nrofMapFilesRead) {
-//                    throw new SettingsError("Can't use map type selection '" + i
-//                            + "' for setting " +
-//                            settings.getFullPropertyName(MAP_SELECT_S)
-//                            + " because only " + nrofMapFilesRead +
-//                            " map files are read");
-//                }
-//            }
-//        }
-//        else {
-//            this.okMapNodeTypes = null;
-//        }
-
-
 
         //TODO 读取设置
         initGrid();
 
-        initRegions();
+        initRegions(settings);
 
-        loadTransProb();
+        loadTransProb(settings);//读入区域转移概率
     }
 
     /**
      * 初始化区域转移矩阵
+     * 输入格式为 event,regionf,hour,regionto, event, all transprob
+     * 0	334	0	48	1	24	0.04166667
+     * 0	296	0	57	1	111	0.009009009
+     * 1	448	0	255	1	10	0.1
      */
-    private void loadTransProb() {
+    private void loadTransProb(Settings settings)
+    {
+        transProbFileName = settings.getSetting(FILE_TRANS_PROB_S);
 
+        File inFile = new File(transProbFileName);
+        Scanner scanner;
+        try {
+            scanner = new Scanner(inFile);
+        } catch (FileNotFoundException e) {
+            throw new SettingsError("Couldn't find transprob movement input " +
+                    "file " + inFile);
+        }
+        System.out.println("Loading transition prob...");
 
+        //初始化数据结构
+        this.timeRegionTransProbs = new Hashtable<String,Hashtable<String,Double>>();
+        //读入数据
+        while(scanner.hasNextLine())
+        {
+            String nextLine = scanner.nextLine().trim();
+            /**
+             *      * 输入格式为 event,regionf,hour,regionto, event_num, all transprob
+             */
+            String s[] = nextLine.split("\t");
+            int _event = Integer.parseInt(s[0]);
+            int _regionFrom_id = Integer.parseInt(s[1]);
+            int _time = Integer.parseInt(s[2]);
+            int _regionTo_id = Integer.parseInt(s[3]);
+            double _tansProb = Double.parseDouble(s[6]);
+
+            String regionKey = ExtRegion.getRegionKey(_regionFrom_id, _event);
+            String _timeRegionKey = getTimeFromRegionKey(_time, regionKey);
+            if (!this.timeRegionTransProbs.contains(_timeRegionKey)) {
+                this.timeRegionTransProbs.put(_timeRegionKey, new Hashtable<String, Double>());
+            }
+
+            int _reverse_event = _event==0?1:0;
+            String _regionToKey = ExtRegion.getRegionKey(_regionTo_id,_reverse_event);
+
+            this.timeRegionTransProbs.get(_timeRegionKey).put(_regionToKey, _tansProb);
+        }
+        System.out.println("fininsh loading transition prob...");
+        scanner.close();
     }
 
     /**
@@ -127,9 +174,27 @@ public class Scene {
     /*
      * 初始化区域
      */
-    private void initRegions() {
+    private void initRegions(Settings settings) {
+
+        this.nrofEvent0RegionFiles = Integer.parseInt(
+                settings.getSetting(NROF_EVENT0_REGIONFILES_S));
+        this.nrofEvent1RegionFiles = Integer.parseInt(
+                settings.getSetting(NROF_EVENT1_REGIONFILES_S));
+
+        this.event0Regions = new String[this.nrofEvent0RegionFiles];
+        this.event1Regions = new String[this.nrofEvent1RegionFiles];
+
+        for (int i = 0; i < this.nrofEvent0RegionFiles; i++) {
+            this.event0Regions[i] = settings.getSetting(EVENT0_REGION_PROFIX + i);
+        }
+
+        for (int i = 0; i < this.nrofEvent1RegionFiles; i++) {
+            this.event1Regions[i] = settings.getSetting(EVENT1_REGION_PROFIX + i);
+        }
+
         loadGrid2Region2RegionSet(0);
         loadGrid2Region2RegionSet(1);
+        loadRegion2MapNode();
 
     }
 
@@ -171,21 +236,25 @@ public class Scene {
     }
 
 
-
-
-
     /**
      * 载入事件对应的区域集合
-     *
-     * @param event 0 1
      */
     private void loadGrid2Region2RegionSet(int event) {
-        // TODO Auto-generated method stub
-        //time gain size 24
-        int fileIndex = 0;
-        for (int i = 0; i < fileIndex; i++) {
-            File inFile = new File(Area_matrix_inputFileName[event][i]);
-            System.out.println("begin loading cells and region [" + Area_matrix_inputFileName[event][i] + "]...");
+        int filesCount;
+        String[] fileNames;
+
+        if (event == 0) {
+            filesCount = this.nrofEvent0RegionFiles;
+            fileNames = this.event0Regions;
+        } else {
+            filesCount = this.nrofEvent1RegionFiles;
+            fileNames = this.event1Regions;
+        }
+
+        //time gain size 1 hour
+        for (int i = 0; i < filesCount; i++) {
+            File inFile = new File(fileNames[i]);
+            System.out.println("begin loading cells and region [" + fileNames[i] + "]...");
 
             Scanner scanner;
             try {
@@ -232,14 +301,10 @@ public class Scene {
                 this.timeEventRegionSets.put(teKey, _regions);
             }
 
-            //建立索引，从time，grid，到regionId
-
-
             System.out.println("fininsh loading cells and region...");
             scanner.close();
 
         }
-
 
     }
 
@@ -284,7 +349,7 @@ public class Scene {
     }
 
 
-    public static String getTimeFromRegionKey(int time, String region_f) {
-        return time + "-" + region_f;
+    public static String getTimeFromRegionKey(int time, String regionFrom_key) {
+        return time + "-" + regionFrom_key;
     }
 }
