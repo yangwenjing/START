@@ -26,7 +26,7 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
      * 记录节点的速度
      */
     private double speed;
-    
+
     /**
      * 引入仿真开始时刻
      */
@@ -69,9 +69,7 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
 
         //每次getPath就转换状态
         reverseStatus();
-//
-//        this.speed = generateSpeed(this.status);
-//        Path p = new Path(speed);
+
         Path p = new Path();
 
         MapNode to = getNextMapNode();
