@@ -1,4 +1,4 @@
-Scenario.name = map_2009_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_range%%btInterface.transmitRange%%
+Scenario.name = poi_map_2009_%%Group.movementModel%%_%%Group.router%%_nodes_%%Group.nrofHosts%%_range%%btInterface.transmitRange%%
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
@@ -41,6 +41,7 @@ Group1.groupID = p
 
 Group1.speed = 0.0, 55.0
 
+Group1.pois=1,0.5,2,0.3,3,0.15,4,0.5
 
 #################################################################################################
 ## Message creation parameters 
@@ -145,3 +146,9 @@ GUI.UnderlayImage.rotate = -0.015
 GUI.EventLogPanel.nrofEvents = 100
 # Regular Expression log filter (see Pattern-class from the Java API for RE-matching details)
 #GUI.EventLogPanel.REfilter = .*p[1-9]<->p[1-9]$
+
+PointsOfInterest.poiFile1 = data/out_type1.wkt
+PointsOfInterest.poiFile2 = data/out_type1.wkt
+PointsOfInterest.poiFile3 = data/out_type1.wkt
+PointsOfInterest.poiFile4 = data/out_type1.wkt
+
