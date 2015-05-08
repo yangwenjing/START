@@ -3,8 +3,6 @@ package movement.entity;
 import core.Coord;
 import core.Settings;
 import core.SettingsError;
-import input.ExternalMovementReader;
-import movement.ExternalMovement;
 import movement.map.MapNode;
 import movement.map.SimMap;
 
@@ -25,8 +23,8 @@ public class Scene {
     private static final String SCENE_MANAGER_NS = "Scene";
     public static final String NROF_EVENT0_REGIONFILES_S = "nrofEvent0RegionFiles";
     public static final String NROF_EVENT1_REGIONFILES_S = "nrofEvent1RegionFiles";
-    public static final String EVENT0_REGION_PROFIX = "event0Region";
-    public static final String EVENT1_REGION_PROFIX = "event1Region";
+    public static final String EVENT0_REGION_PREFIX = "event0Region";
+    public static final String EVENT1_REGION_PREFIX = "event1Region";
 
     //有多少Event0 region
     //载入多少Event0 region
@@ -39,11 +37,11 @@ public class Scene {
     //获取事件和区域的对应关系
 
     //CVS格式数据
-    public static final String EVENT0_REGION_Time = "event0Region";
-    public static final String EVENT1_REGION_Time = "event1Region";
+    public static final String EVENT0_REGION_TIMES_PREFIX = "event0RegionTimes";
+    public static final String EVENT1_REGION_TIMES_PREFIX = "event1RegionTimes";
 
-    public int[] Event0RegionTime;
-    public int[] Event1RegionTime;
+    public List<int[]> event0RegionTimes;
+    public List<int[]> event1RegionTimes;
 
     //读取区域转移概率矩阵
     public static final String FILE_TRANS_PROB_S = "transProbFile";//输入文件
@@ -186,12 +184,17 @@ public class Scene {
         this.event0Regions = new String[this.nrofEvent0RegionFiles];
         this.event1Regions = new String[this.nrofEvent1RegionFiles];
 
+        this.event0RegionTimes = new ArrayList<int[]>(this.nrofEvent0RegionFiles);
+        this.event1RegionTimes = new ArrayList<int[]>(this.nrofEvent1RegionFiles);
+
         for (int i = 0; i < this.nrofEvent0RegionFiles; i++) {
-            this.event0Regions[i] = settings.getSetting(EVENT0_REGION_PROFIX + i);
+            this.event0Regions[i] = settings.getSetting(EVENT0_REGION_PREFIX + i);
+            this.event0RegionTimes.add(settings.getCsvInts(EVENT0_REGION_TIMES_PREFIX+i));
         }
 
         for (int i = 0; i < this.nrofEvent1RegionFiles; i++) {
-            this.event1Regions[i] = settings.getSetting(EVENT1_REGION_PROFIX + i);
+            this.event1Regions[i] = settings.getSetting(EVENT1_REGION_PREFIX + i);
+            this.event1RegionTimes.add(settings.getCsvInts(EVENT1_REGION_TIMES_PREFIX+i));
         }
 
         loadGrid2Region2RegionSet(0);
@@ -243,13 +246,16 @@ public class Scene {
     private void loadGrid2Region2RegionSet(int event) {
         int filesCount;
         String[] fileNames;
+        List<int[]> regionTimes;
 
         if (event == 0) {
             filesCount = this.nrofEvent0RegionFiles;
             fileNames = this.event0Regions;
+            regionTimes = this.event0RegionTimes;
         } else {
             filesCount = this.nrofEvent1RegionFiles;
             fileNames = this.event1Regions;
+            regionTimes = this.event1RegionTimes;
         }
 
         //time gain size 1 hour
@@ -296,8 +302,8 @@ public class Scene {
 
             }
 
-            for (int j = 0; j < (timeList.get(i)).size(); j++) {
-                int _time = timeList.get(i).get(j);
+            for (int j = 0; j < regionTimes.get(i).length; j++) {
+                int _time = regionTimes.get(i).length;
                 String teKey = getTimeEventKey(_time, event);
                 this.timeEventRegionSets.put(teKey, _regions);
             }
