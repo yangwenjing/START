@@ -35,13 +35,6 @@ public class Scene {
     public String[] event1Regions;
 
 
-    /**
-     * grid的x,y长度
-     */
-    public static final String GRID_SIZE = "gridSize";
-    public static int glen_x, glen_y;
-    //获取事件和区域的对应关系
-
     //CVS格式数据
     public static final String EVENT0_REGION_TIMES_PREFIX = "event0RegionTimes";
     public static final String EVENT1_REGION_TIMES_PREFIX = "event1RegionTimes";
@@ -53,7 +46,6 @@ public class Scene {
     public static final String FILE_TRANS_PROB_S = "transProbFile";//输入文件
 
     public static String transProbFileName;
-
 
 
     private static Scene ourInstance = null;
@@ -73,6 +65,15 @@ public class Scene {
      */
     public static final String SCENE_SCALE = "seneScale";
     public static int grids_x, grids_y;
+
+
+    /**
+     * grid的x,y长度
+     */
+    public static final String GRID_SIZE = "gridSize";
+    public static int glen_x, glen_y;
+    //获取事件和区域的对应关系
+
 
     public Hashtable<String, ExtGrid> grids = null;
     public Hashtable<String, ExtRegion> regionPool = new Hashtable<String, ExtRegion>();
@@ -95,8 +96,8 @@ public class Scene {
         grids_y = scale[1];
 
         int []size = settings.getCsvInts(GRID_SIZE);
-        int grid_x = size[0];
-        int grid_y = size[1];
+        glen_x = size[0];
+        glen_y = size[1];
         //TODO 读取设置
         initGrid();
 
