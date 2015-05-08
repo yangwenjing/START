@@ -34,6 +34,12 @@ public class Scene {
     public int nrofEvent1RegionFiles;
     public String[] event1Regions;
 
+
+    /**
+     * grid的x,y长度
+     */
+    public static final String GRID_SIZE = "gridSize";
+    public static int glen_x, glen_y;
     //获取事件和区域的对应关系
 
     //CVS格式数据
@@ -59,23 +65,13 @@ public class Scene {
         return ourInstance;
     }
 
-    /***************begion of 参数区*******************/
-    /**
-     * setttings parameters
-     */
-    public static String[][] Area_matrix_inputFileName;
-    public static int beginTime;//开始时刻
-    public static int timeLength;//仿真几小时
     public static List<List<Integer>> timeList = new ArrayList<List<Integer>>();
     public static SimMap map=null;
 
     /**
-     * grid的x,y长度
-     */
-    public static double glen_x, glen_y;
-    /**
      * grids x,y 方向的个数
      */
+    public static final String SCENE_SCALE = "seneScale";
     public static int grids_x, grids_y;
 
     public Hashtable<String, ExtGrid> grids = null;
@@ -94,7 +90,13 @@ public class Scene {
      * 初始化获取grid，region，regionset
      */
     private Scene(Settings settings) {
+        int [] scale = settings.getCsvInts(SCENE_SCALE);
+        grids_x = scale[0];
+        grids_y = scale[1];
 
+        int []size = settings.getCsvInts(GRID_SIZE);
+        int grid_x = size[0];
+        int grid_y = size[1];
         //TODO 读取设置
         initGrid();
 
@@ -358,5 +360,17 @@ public class Scene {
 
     public static String getTimeFromRegionKey(int time, String regionFrom_key) {
         return time + "-" + regionFrom_key;
+    }
+
+    /**
+     * 从coord找到region
+     * @param coord
+     * @return ExtGrid的id
+     */
+    public String fromCoordToGrid(Coord coord)
+    {
+        int x = (int) Math.floor(coord.getX()/glen_x);
+        int y = (int) Math.floor(coord.getY()/glen_y);
+        return this.grids.get(ExtGrid.getKeyForGrid(x,y)).grid_id;
     }
 }

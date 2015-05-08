@@ -22,8 +22,6 @@ import java.util.Random;
  */
 public class RegionManager {
 
-
-
     private static RegionManager ourInstance = null;
 
     public static RegionManager getInstance(Settings settings) {
@@ -42,15 +40,6 @@ public class RegionManager {
         this.scene = Scene.getInstance(settings);
     }
 
-    /**
-     * 从coord找到region
-     * @param coord
-     * @return ExtGrid的id
-     */
-    public String fromCoordToGrid(Coord coord)
-    {
-        return scene.grids.get(ExtGrid.getKeyForGrid((int)coord.getX(),(int)coord.getY())).grid_id;
-    }
 
     /**
      *  * TODO 从to region中按概率选区
@@ -111,7 +100,7 @@ public class RegionManager {
      */
     public MapNode fromCoordToNextMapNode(int time,int event,Coord coord)
     {
-        String gridKey = fromCoordToGrid(coord);
+        String gridKey = this.scene.fromCoordToGrid(coord);
         String region_key = fromTimeEventGridToRegion(time, event, gridKey);
         try {
             String toRegion_key = toRegion(time,event,region_key);

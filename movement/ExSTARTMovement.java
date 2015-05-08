@@ -23,11 +23,6 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
     private int status;
 
     /**
-     * 判断是否超过持续时长
-     */
-    //private int timer;
-
-    /**
      * 记录节点的速度
      */
     private double speed;
