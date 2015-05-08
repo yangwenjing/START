@@ -103,6 +103,8 @@ public class Scene {
         initRegions(settings);
 
         loadTransProb(settings);//读入区域转移概率
+
+        loadRegion2MapNode();
     }
 
     /**
@@ -194,7 +196,6 @@ public class Scene {
 
         loadGrid2Region2RegionSet(0);
         loadGrid2Region2RegionSet(1);
-        loadRegion2MapNode();
 
     }
 
