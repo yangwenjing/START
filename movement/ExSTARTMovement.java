@@ -29,7 +29,7 @@ public class ExSTARTMovement extends MapBasedMovement implements SwitchableMovem
     /**
      * 记录节点的持续时长
      */
-    private double duration;
+//    private double duration;
     /**
      * 引入仿真开始时刻
      */
